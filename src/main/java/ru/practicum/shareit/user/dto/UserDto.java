@@ -1,19 +1,26 @@
 package ru.practicum.shareit.user.dto;
 
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
+import ru.practicum.shareit.validation.Create;
+import ru.practicum.shareit.validation.Update;
 
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 
-@AllArgsConstructor
 @Data
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class UserDto {
+    private long id;
 
-    @NotBlank(message = "Введите имя")
+    @NotBlank(groups = {Create.class})
     private String name;
 
-    @Email(message = "Неправильно введен email")
-    @NotBlank(message = "Введите email")
+    @Email(groups = {Create.class, Update.class}, regexp = "^[\\w-\\.]+@([\\w-]+\\.)+[\\w-]{2,4}$")
+    @NotBlank(groups = {Create.class})
     private String email;
 }
