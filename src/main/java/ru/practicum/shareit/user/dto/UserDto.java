@@ -20,7 +20,7 @@ public class UserDto {
     @NotBlank(groups = {Create.class})
     private String name;
 
-    @Email(groups = {Create.class, Update.class}, regexp = "^[\\w-\\.]+@([\\w-]+\\.)+[\\w-]{2,4}$")
+    @Email(groups = {Create.class, Update.class})
     @NotBlank(groups = {Create.class})
     private String email;
 }

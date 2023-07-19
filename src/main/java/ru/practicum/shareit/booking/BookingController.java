@@ -17,9 +17,6 @@ import java.util.stream.Collectors;
 
 import static ru.practicum.shareit.util.Constants.REQUEST_HEADER_USER_ID;
 
-/**
- * TODO Sprint add-bookings.
- */
 @RestController
 @Validated
 @RequiredArgsConstructor

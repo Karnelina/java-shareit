@@ -14,7 +14,7 @@ public class Constants {
     public static final String ERROR_RESPONSE = "error";
     public static final String TIME_PATTERN = "YYYY-MM-DDTHH:mm:ss";
 
-    public static final Comparator<Booking> orderByStartDateAsc = (a, b) -> {
+    public static final Comparator<Booking> orderByStartDateAsc = (Booking a, Booking b) -> {
         if (a.getStart().isAfter(b.getStart())) {
             return 1;
         } else if (a.getStart().isBefore(b.getStart())) {
@@ -24,7 +24,7 @@ public class Constants {
         }
     };
 
-    public static final Comparator<Booking> orderByStartDateDesc = (a, b) -> {
+    public static final Comparator<Booking> orderByStartDateDesc = (Booking a, Booking  b) -> {
         if (a.getStart().isAfter(b.getStart())) {
             return -1;
         } else if (a.getStart().isBefore(b.getStart())) {

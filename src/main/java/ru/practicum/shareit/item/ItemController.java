@@ -18,9 +18,6 @@ import java.util.Collection;
 
 import static ru.practicum.shareit.util.Constants.REQUEST_HEADER_USER_ID;
 
-/**
- * TODO Sprint add-controllers.
- */
 @RequiredArgsConstructor
 @RestController
 @Slf4j

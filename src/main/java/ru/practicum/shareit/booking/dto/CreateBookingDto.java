@@ -12,9 +12,6 @@ import java.time.LocalDateTime;
 
 import static ru.practicum.shareit.util.Constants.TIME_PATTERN;
 
-/**
- * TODO Sprint add-bookings.
- */
 
 @Data
 @Builder

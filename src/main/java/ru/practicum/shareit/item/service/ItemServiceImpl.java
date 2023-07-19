@@ -130,12 +130,15 @@ public class ItemServiceImpl implements ItemService {
                     } else if (lastOptional.isEmpty()) {
                         GetItemBookingDto next = BookingMapper.toGetItemBookingDtoFromBooking(nextOptional.get());
                         return ItemMapper.mapToItemAllFieldsDto(item, null, next, itemComments);
+                    } else {
+
+                        GetItemBookingDto last = BookingMapper.toGetItemBookingDtoFromBooking(lastOptional.get());
+                        GetItemBookingDto next = BookingMapper.toGetItemBookingDtoFromBooking(nextOptional.get());
+
+                        return ItemMapper.mapToItemAllFieldsDto(item, last, next, itemComments);
                     }
 
-                    GetItemBookingDto last = BookingMapper.toGetItemBookingDtoFromBooking(lastOptional.get());
-                    GetItemBookingDto next = BookingMapper.toGetItemBookingDtoFromBooking(nextOptional.get());
 
-                    return ItemMapper.mapToItemAllFieldsDto(item, last, next, itemComments);
                 })
                 .collect(Collectors.toList());
     }
