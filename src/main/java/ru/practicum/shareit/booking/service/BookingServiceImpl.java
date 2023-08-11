@@ -27,7 +27,6 @@ import static ru.practicum.shareit.booking.model.Status.*;
 @RequiredArgsConstructor
 @Transactional
 public class BookingServiceImpl implements BookingService {
-
     private final BookingRepository bookingRepository;
     private final ItemRepository itemRepository;
     private final UserRepository userRepository;

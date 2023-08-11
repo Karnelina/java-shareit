@@ -11,7 +11,7 @@ import java.io.IOException;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @JsonTest
-class BookingDtoTests {
+class GetItemBookingDtoTest {
 
     @Autowired
     private JacksonTester<GetItemBookingDto> bookingDtoJacksonTester;
