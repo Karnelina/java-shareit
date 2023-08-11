@@ -1,53 +1,45 @@
 package ru.practicum.shareit.item.mapper;
 
-import lombok.experimental.UtilityClass;
+import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
+import org.mapstruct.Named;
+import org.mapstruct.factory.Mappers;
 import ru.practicum.shareit.booking.dto.GetItemBookingDto;
 import ru.practicum.shareit.item.dto.CommentResponseDto;
 import ru.practicum.shareit.item.dto.ItemAllFieldsDto;
 import ru.practicum.shareit.item.dto.ItemDto;
-import ru.practicum.shareit.item.dto.ItemShortDto;
+import ru.practicum.shareit.item.dto.ItemGetOwnItemRequestDto;
 import ru.practicum.shareit.item.model.Item;
+import ru.practicum.shareit.request.model.ItemRequest;
 
-import java.util.List;
+import java.util.Collection;
 
-@UtilityClass
-public class ItemMapper {
+@Mapper(componentModel = "spring")
+public interface ItemMapper {
+    ItemMapper INSTANCE = Mappers.getMapper(ItemMapper.class);
 
-    public Item mapToItem(ItemDto itemDto) {
-        return Item.builder()
-                .id(itemDto.getId())
-                .name(itemDto.getName())
-                .description(itemDto.getDescription())
-                .available(itemDto.getAvailable())
-                .build();
+    @Mapping(source = "itemRequest.id", target = "requestId")
+    ItemDto mapToItemDto(Item item);
+
+    @Mapping(source = "itemRequest.id", target = "requestId")
+    ItemGetOwnItemRequestDto mapFromItemToItemGetOwnItemRequestDto(Item item);
+
+    default long mapItemRequestToLong(ItemRequest itemRequest) {
+        return itemRequest != null ? itemRequest.getId() : 0L;
     }
 
-    public ItemDto mapToItemDto(Item item) {
-        return ItemDto.builder()
-                .id(item.getId())
-                .name(item.getName())
-                .description(item.getDescription())
-                .available(item.getAvailable())
-                .build();
+    @Mapping(source = "id", target = "id", qualifiedByName = "getIdToString")
+    Item mapToItem(ItemDto itemDto);
+
+    @Named("getIdToString")
+    default Long getIdToString(Long id) {
+        return id;
     }
 
-    public ItemAllFieldsDto mapToItemAllFieldsDto(Item item, GetItemBookingDto lastBooking,
-                                                  GetItemBookingDto nextBooking, List<CommentResponseDto> comments) {
-        return new ItemAllFieldsDto(
-                item.getId(),
-                item.getName(),
-                item.getDescription(),
-                item.getAvailable(),
-                lastBooking,
-                nextBooking,
-                comments
-        );
-    }
+    @Mapping(source = "id", target = "id")
+    GetItemBookingDto mapLongToBookingDtoId(Long id);
 
-    public ItemShortDto toGetBookingDtoFromItem(Item item) {
-        return ItemShortDto.builder()
-                .id(item.getId())
-                .name(item.getName())
-                .build();
-    }
+    @Mapping(source = "item.id", target = "id")
+    ItemAllFieldsDto mapToItemAllFieldsDto(Item item, GetItemBookingDto lastBooking,
+                                           GetItemBookingDto nextBooking, Collection<CommentResponseDto> comments);
 }

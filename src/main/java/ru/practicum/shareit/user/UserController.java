@@ -1,71 +1,56 @@
 package ru.practicum.shareit.user;
 
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+import ru.practicum.shareit.aspect.ToLog;
 import ru.practicum.shareit.user.dto.UserDto;
 import ru.practicum.shareit.user.dto.UserMapper;
 import ru.practicum.shareit.user.model.User;
 import ru.practicum.shareit.user.service.UserService;
-import ru.practicum.shareit.validation.Create;
-import ru.practicum.shareit.validation.Update;
+import ru.practicum.shareit.validation.marker.Create;
+import ru.practicum.shareit.validation.marker.Update;
 
-import java.util.List;
+import java.util.Collection;
 import java.util.stream.Collectors;
 
-@RequiredArgsConstructor
 @RestController
-@Slf4j
 @RequestMapping(path = "/users")
+@RequiredArgsConstructor
+@Validated
+@ToLog
 public class UserController {
     private final UserService userService;
 
-    @PostMapping()
+    @PostMapping
     public UserDto saveUser(@Validated(Create.class) @RequestBody UserDto userDto) {
-
-        User user = userService.save(UserMapper.mapToUser(userDto));
-
-        log.info("Post saveUser received");
-
-        return UserMapper.mapToUserDto(user);
+        User user = userService.save(UserMapper.INSTANCE.mapToUser(userDto));
+        return UserMapper.INSTANCE.mapToUserDto(user);
     }
 
-    @PatchMapping("/{id}")
-    public UserDto updateUser(@Validated(Update.class) @PathVariable long id, @RequestBody UserDto userDto) {
-        User user = userService.update(id, UserMapper.mapToUser(userDto));
-
-        log.info("Patch updateUser received");
-
-        return UserMapper.mapToUserDto(user);
-    }
-
-    @GetMapping()
-    public List<UserDto> findAllUsers() {
-
-        log.info("Get findAllUsers received");
-
-        return userService
-                .findAll()
-                .stream()
-                .map(UserMapper::mapToUserDto)
-                .collect(Collectors.toList());
+    @PatchMapping("/{userId}")
+    public UserDto updateUser(@Validated(Update.class) @RequestBody UserDto userDto, @PathVariable long userId) {
+        User user = userService.update(UserMapper.INSTANCE.mapToUser(userDto), userId);
+        return UserMapper.INSTANCE.mapToUserDto(user);
     }
 
     @GetMapping("/{id}")
-    public User findUserById(@PathVariable long id) {
+    public UserDto findUserById(@PathVariable long id) {
+        User user = userService.findById(id);
+        return UserMapper.INSTANCE.mapToUserDto(user);
+    }
 
-        log.info("Get findUserById received");
-
-        return userService.findById(id);
+    @GetMapping
+    public Collection<UserDto> findAllUsers() {
+        return userService
+                .findAll()
+                .stream()
+                .map(UserMapper.INSTANCE::mapToUserDto)
+                .collect(Collectors.toList());
     }
 
     @DeleteMapping("/{id}")
     public void deleteUserById(@PathVariable long id) {
-
-        log.info("Delete deleteUserById received");
-
         userService.deleteById(id);
     }
-
 }

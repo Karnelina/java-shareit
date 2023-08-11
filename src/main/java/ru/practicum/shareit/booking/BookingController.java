@@ -1,42 +1,45 @@
 package ru.practicum.shareit.booking;
 
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Pageable;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+import ru.practicum.shareit.aspect.ToLog;
 import ru.practicum.shareit.booking.dto.BookingAllFieldsDto;
 import ru.practicum.shareit.booking.dto.BookingMapper;
 import ru.practicum.shareit.booking.dto.CreateBookingDto;
 import ru.practicum.shareit.booking.model.Booking;
 import ru.practicum.shareit.booking.service.BookingService;
+import ru.practicum.shareit.util.OffsetBasedPageRequest;
 import ru.practicum.shareit.validation.ValuesAllowedConstraint;
 
 import javax.validation.Valid;
+import javax.validation.constraints.Positive;
+import javax.validation.constraints.PositiveOrZero;
 import java.util.Collection;
 import java.util.stream.Collectors;
 
-import static ru.practicum.shareit.util.Constants.REQUEST_HEADER_USER_ID;
+import static ru.practicum.shareit.util.Constants.*;
 
-@RestController
 @Validated
+@RestController
 @RequiredArgsConstructor
-@Slf4j
 @RequestMapping(path = "/bookings")
+@ToLog
 public class BookingController {
 
     private final BookingService bookingService;
 
     @PostMapping
-    public BookingAllFieldsDto saveBooking(@Valid @RequestBody CreateBookingDto createBookingDto,
+    public BookingAllFieldsDto saveBooking(@Valid @RequestBody CreateBookingDto bookingSavingDto,
                                            @RequestHeader(REQUEST_HEADER_USER_ID) long userId) {
         Booking booking = bookingService.save(
-                createBookingDto.getItemId(),
-                createBookingDto.getStart(),
-                createBookingDto.getEnd(),
+                bookingSavingDto.getItemId(),
+                bookingSavingDto.getStart(),
+                bookingSavingDto.getEnd(),
                 userId);
 
-        log.info("Post saveBooking received" + booking);
-        return BookingMapper.mapToAllFieldsBooking(booking);
+        return BookingMapper.INSTANCE.mapToBookingAllFieldsDto(booking);
     }
 
     @GetMapping
@@ -49,12 +52,13 @@ public class BookingController {
                                                                                    "waiting",
                                                                                    "rejected"},
                                                                            message = "Unknown state: UNSUPPORTED_STATUS")
-                                                                   @RequestParam(defaultValue = "all") String state) {
-        log.info("Get findAllBookingsByUserId received");
-
-        return bookingService.findByUserId(userId, state)
+                                                                   @RequestParam(defaultValue = "all") String state,
+                                                                   @RequestParam(defaultValue = PAGE_DEFAULT_FROM) @PositiveOrZero Short from,
+                                                                   @RequestParam(defaultValue = PAGE_DEFAULT_SIZE) @Positive Short size) {
+        Pageable page = new OffsetBasedPageRequest(from, size, SORT_BY_START_DATE_DESC);
+        return bookingService.findByUserId(userId, state, page)
                 .stream()
-                .map(BookingMapper::mapToAllFieldsBooking)
+                .map(BookingMapper.INSTANCE::mapToBookingAllFieldsDto)
                 .collect(Collectors.toList());
     }
 
@@ -62,23 +66,16 @@ public class BookingController {
     public BookingAllFieldsDto updateAvailableStatus(@PathVariable long bookingId,
                                                      @RequestParam(required = false) Boolean approved,
                                                      @RequestHeader(REQUEST_HEADER_USER_ID) long userId) {
-
         Booking booking = bookingService.updateAvailableStatus(bookingId, approved, userId);
-
-        log.info("Patch updateAvailableStatus received");
-
-        return BookingMapper.mapToAllFieldsBooking(booking);
+        return BookingMapper.INSTANCE.mapToBookingAllFieldsDto(booking);
     }
 
     @GetMapping("/{bookingId}")
     public BookingAllFieldsDto findBookingByUserOwner(@PathVariable long bookingId,
                                                       @RequestHeader(value = REQUEST_HEADER_USER_ID) long userId) {
-
         Booking booking = bookingService.findAllBookingsByUserId(bookingId, userId);
 
-        log.info("Get findBookingByUserOwner received");
-
-        return BookingMapper.mapToAllFieldsBooking(booking);
+        return BookingMapper.INSTANCE.mapToBookingAllFieldsDto(booking);
     }
 
     @GetMapping("/owner")
@@ -91,13 +88,14 @@ public class BookingController {
                                                                              "waiting",
                                                                              "rejected"},
                                                                      message = "Unknown state: UNSUPPORTED_STATUS")
-                                                             @RequestParam(defaultValue = "all") String state) {
+                                                             @RequestParam(defaultValue = "all") String state,
+                                                             @RequestParam(defaultValue = PAGE_DEFAULT_FROM) @PositiveOrZero Short from,
+                                                             @RequestParam(defaultValue = PAGE_DEFAULT_SIZE) @Positive Short size) {
 
-        log.info("Get findOwnerBookings received");
-
-        return bookingService.findOwnerBookings(userId, state)
+        Pageable page = new OffsetBasedPageRequest(from, size, SORT_BY_START_DATE_DESC);
+        return bookingService.findOwnerBookings(userId, state, page)
                 .stream()
-                .map(BookingMapper::mapToAllFieldsBooking)
+                .map(BookingMapper.INSTANCE::mapToBookingAllFieldsDto)
                 .collect(Collectors.toList());
     }
 }
