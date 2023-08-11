@@ -8,7 +8,7 @@ import ru.practicum.shareit.request.model.ItemRequest;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
 
-class mapToItemDtoTest {
+class ItemMapperTests {
     @Test
     void mapToItemDtoTest() {
         Item item = Item.builder()
