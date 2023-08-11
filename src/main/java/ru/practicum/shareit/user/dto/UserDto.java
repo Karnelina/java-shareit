@@ -22,8 +22,8 @@ public class UserDto {
     @Size(max = 255, groups = {Create.class, Update.class})
     private String name;
 
-    @Email(groups = {Create.class, Update.class})
     @NotBlank(groups = {Create.class})
+    @Email(groups = {Create.class, Update.class}, regexp = "^[\\w-\\.]+@([\\w-]+\\.)+[\\w-]{2,4}$")
     @Size(max = 255, groups = {Create.class, Update.class})
     private String email;
 }
