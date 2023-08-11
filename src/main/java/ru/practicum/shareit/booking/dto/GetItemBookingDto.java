@@ -10,6 +10,6 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class GetItemBookingDto {
-    private long id;
-    private long bookerId;
+    private Long id;
+    private Long bookerId;
 }
