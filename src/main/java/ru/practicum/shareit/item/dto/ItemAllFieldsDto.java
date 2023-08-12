@@ -15,7 +15,7 @@ public class ItemAllFieldsDto {
     private String name;
     private String description;
     private Boolean available;
-    private long itemRequest;
+    private Long itemRequest;
     private GetItemBookingDto lastBooking;
     private GetItemBookingDto nextBooking;
     Collection<CommentResponseDto> comments;

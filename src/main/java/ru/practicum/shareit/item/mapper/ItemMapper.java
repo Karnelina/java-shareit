@@ -24,7 +24,7 @@ public interface ItemMapper {
     @Mapping(source = "itemRequest.id", target = "requestId")
     ItemGetOwnItemRequestDto mapFromItemToItemGetOwnItemRequestDto(Item item);
 
-    default long mapItemRequestToLong(ItemRequest itemRequest) {
+    default Long mapItemRequestToLong(ItemRequest itemRequest) {
         return itemRequest != null ? itemRequest.getId() : 0L;
     }
 

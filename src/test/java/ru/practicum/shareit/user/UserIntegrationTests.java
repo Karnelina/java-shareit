@@ -85,7 +85,7 @@ class UserIntegrationTests {
         userService.save(user);
         assertThat(userService.findAll().size(), equalTo(1));
 
-        userService.deleteById(1);
+        userService.deleteById(1L);
         assertThat(userService.findAll().size(), equalTo(0));
     }
 }

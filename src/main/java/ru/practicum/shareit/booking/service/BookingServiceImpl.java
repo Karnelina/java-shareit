@@ -32,7 +32,7 @@ public class BookingServiceImpl implements BookingService {
     private final UserRepository userRepository;
 
     @Override
-    public Booking save(long itemId, LocalDateTime start, LocalDateTime end, long bookerId) {
+    public Booking save(Long itemId, LocalDateTime start, LocalDateTime end, Long bookerId) {
         Item item = itemRepository.findById(itemId).orElseThrow(() ->
                 new NotFoundException(String.format("Вещь %s не найдена.", itemId)));
 
@@ -61,7 +61,7 @@ public class BookingServiceImpl implements BookingService {
 
     @Override
     @Transactional(readOnly = true)
-    public Collection<Booking> findByUserId(long userId, String stateString, Pageable page) {
+    public Collection<Booking> findByUserId(Long userId, String stateString, Pageable page) {
         User user = userRepository.findById(userId).orElseThrow(
                 () -> new NotFoundException(String.format("Пользователь %s не найден.", userId))
         );
@@ -101,7 +101,7 @@ public class BookingServiceImpl implements BookingService {
     }
 
     @Override
-    public Booking updateAvailableStatus(long bookingId, Boolean state, long userId) {
+    public Booking updateAvailableStatus(Long bookingId, Boolean state, Long userId) {
         Booking booking = bookingRepository.findById(bookingId).orElseThrow(
                 () -> new NotFoundException(String.format("Бронирование %s не найдено.", bookingId)));
 
@@ -123,7 +123,7 @@ public class BookingServiceImpl implements BookingService {
     }
 
     @Override
-    public Booking findAllBookingsByUserId(long bookingId, long userId) {
+    public Booking findAllBookingsByUserId(Long bookingId, Long userId) {
         Booking booking = bookingRepository.findById(bookingId).orElseThrow(() ->
                 new NotFoundException(
                         String.format("У пользователя %s бронирование %s не найдено.", userId, bookingId)));
@@ -141,7 +141,7 @@ public class BookingServiceImpl implements BookingService {
 
     @Override
     @Transactional(readOnly = true)
-    public Collection<Booking> findOwnerBookings(long userId, String stateString, Pageable page) {
+    public Collection<Booking> findOwnerBookings(Long userId, String stateString, Pageable page) {
         User user = userRepository.findById(userId).orElseThrow(
                 () -> new NotFoundException(String.format("Пользователь %s не найден.", userId))
         );

@@ -7,13 +7,13 @@ import java.time.LocalDateTime;
 import java.util.Collection;
 
 public interface BookingService {
-    Booking save(long itemId, LocalDateTime start, LocalDateTime end, long userId);
+    Booking save(Long itemId, LocalDateTime start, LocalDateTime end, Long userId);
 
-    Collection<Booking> findByUserId(long userId, String state, Pageable page);
+    Collection<Booking> findByUserId(Long userId, String state, Pageable page);
 
-    Booking updateAvailableStatus(long bookingId, Boolean state, long userId);
+    Booking updateAvailableStatus(Long bookingId, Boolean state, Long userId);
 
-    Booking findAllBookingsByUserId(long bookingId, long userId);
+    Booking findAllBookingsByUserId(Long bookingId, Long userId);
 
-    Collection<Booking> findOwnerBookings(long userId, String state, Pageable page);
+    Collection<Booking> findOwnerBookings(Long userId, String state, Pageable page);
 }

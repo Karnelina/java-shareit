@@ -123,7 +123,7 @@ class ItemServiceImplTests {
 
         when(mockUserRepository.findById(user.getId())).thenReturn(Optional.empty());
 
-        long userId = user.getId();
+        Long userId = user.getId();
         assertThrows(NotFoundException.class, () -> itemService.save(itemDto, userId));
 
         verify(mockUserRepository, times(1)).findById(user.getId());

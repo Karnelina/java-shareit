@@ -32,7 +32,7 @@ public class BookingController {
 
     @PostMapping
     public BookingAllFieldsDto saveBooking(@Valid @RequestBody CreateBookingDto bookingSavingDto,
-                                           @RequestHeader(REQUEST_HEADER_USER_ID) long userId) {
+                                           @RequestHeader(REQUEST_HEADER_USER_ID) Long userId) {
         Booking booking = bookingService.save(
                 bookingSavingDto.getItemId(),
                 bookingSavingDto.getStart(),
@@ -43,7 +43,7 @@ public class BookingController {
     }
 
     @GetMapping
-    public Collection<BookingAllFieldsDto> findAllBookingsByUserId(@RequestHeader(REQUEST_HEADER_USER_ID) long userId,
+    public Collection<BookingAllFieldsDto> findAllBookingsByUserId(@RequestHeader(REQUEST_HEADER_USER_ID) Long userId,
                                                                    @ValuesAllowedConstraint(propName = "state",
                                                                            values = {"all",
                                                                                    "current",
@@ -63,23 +63,23 @@ public class BookingController {
     }
 
     @PatchMapping("/{bookingId}")
-    public BookingAllFieldsDto updateAvailableStatus(@PathVariable long bookingId,
+    public BookingAllFieldsDto updateAvailableStatus(@PathVariable Long bookingId,
                                                      @RequestParam(required = false) Boolean approved,
-                                                     @RequestHeader(REQUEST_HEADER_USER_ID) long userId) {
+                                                     @RequestHeader(REQUEST_HEADER_USER_ID) Long userId) {
         Booking booking = bookingService.updateAvailableStatus(bookingId, approved, userId);
         return BookingMapper.INSTANCE.mapToBookingAllFieldsDto(booking);
     }
 
     @GetMapping("/{bookingId}")
-    public BookingAllFieldsDto findBookingByUserOwner(@PathVariable long bookingId,
-                                                      @RequestHeader(value = REQUEST_HEADER_USER_ID) long userId) {
+    public BookingAllFieldsDto findBookingByUserOwner(@PathVariable Long bookingId,
+                                                      @RequestHeader(value = REQUEST_HEADER_USER_ID) Long userId) {
         Booking booking = bookingService.findAllBookingsByUserId(bookingId, userId);
 
         return BookingMapper.INSTANCE.mapToBookingAllFieldsDto(booking);
     }
 
     @GetMapping("/owner")
-    public Collection<BookingAllFieldsDto> findOwnerBookings(@RequestHeader(REQUEST_HEADER_USER_ID) long userId,
+    public Collection<BookingAllFieldsDto> findOwnerBookings(@RequestHeader(REQUEST_HEADER_USER_ID) Long userId,
                                                              @ValuesAllowedConstraint(propName = "state",
                                                                      values = {"all",
                                                                              "current",

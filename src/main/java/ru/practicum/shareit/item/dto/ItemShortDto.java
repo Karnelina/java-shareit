@@ -6,7 +6,7 @@ import lombok.Data;
 @Data
 @AllArgsConstructor
 public class ItemShortDto {
-    private long id;
+    private Long id;
 
     private String name;
 }

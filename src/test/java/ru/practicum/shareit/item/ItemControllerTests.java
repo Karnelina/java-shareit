@@ -167,8 +167,8 @@ class ItemControllerTests {
 
     @Test
     void shouldSaveComment() throws Exception {
-        long itemId = 1;
-        long userId = 1;
+        Long itemId = 1L;
+        Long userId = 1L;
 
         when(mockItemService.saveComment(eq(itemId), eq(userId), anyString()))
                 .thenReturn(commentResponseDto);

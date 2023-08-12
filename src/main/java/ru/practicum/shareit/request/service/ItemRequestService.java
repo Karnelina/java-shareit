@@ -7,11 +7,11 @@ import ru.practicum.shareit.request.model.ItemRequest;
 import java.util.Collection;
 
 public interface ItemRequestService {
-    ItemRequest saveItemRequest(String description, long userId);
+    ItemRequest saveItemRequest(String description, Long userId);
 
-    Collection<ItemRequestResponseDto> findOwnItemRequests(long userId);
+    Collection<ItemRequestResponseDto> findOwnItemRequests(Long userId);
 
-    Collection<ItemRequestResponseDto> findAllItemRequests(long userId, Pageable page);
+    Collection<ItemRequestResponseDto> findAllItemRequests(Long userId, Pageable page);
 
-    ItemRequestResponseDto findItemRequestsById(long userId, long requestId);
+    ItemRequestResponseDto findItemRequestsById(Long userId, Long requestId);
 }

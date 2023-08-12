@@ -100,8 +100,8 @@ class BookingServiceImplTest {
         when(mockItemRepository.findById(anyLong()))
                 .thenReturn(Optional.ofNullable(item));
 
-        long itemId = item.getId();
-        long userId = user.getId();
+        Long itemId = item.getId();
+        Long userId = user.getId();
         assertThrows(NotFoundException.class, () -> bookingService.save(itemId, start, end, userId));
         verify(mockItemRepository, times(1)).findById(anyLong());
     }
@@ -113,8 +113,8 @@ class BookingServiceImplTest {
 
 
         item.setAvailable(false);
-        long itemId = item.getId();
-        long userId = 99L;
+        Long itemId = item.getId();
+        Long userId = 99L;
         assertThrows(ValidationException.class, () -> bookingService.save(itemId, start, end, userId));
         verify(mockItemRepository, times(1)).findById(anyLong());
     }
@@ -124,8 +124,8 @@ class BookingServiceImplTest {
         when(mockItemRepository.findById(anyLong()))
                 .thenReturn(Optional.ofNullable(item));
 
-        long itemId = item.getId();
-        long userId = 99L;
+        Long itemId = item.getId();
+        Long userId = 99L;
         LocalDateTime min = LocalDateTime.MIN;
         LocalDateTime max = LocalDateTime.MAX;
         LocalDateTime now = LocalDateTime.now();
@@ -147,8 +147,8 @@ class BookingServiceImplTest {
         when(mockUserRepository.findById(anyLong()))
                 .thenReturn(Optional.empty());
 
-        long itemId = item.getId();
-        long userId = 99L;
+        Long itemId = item.getId();
+        Long userId = 99L;
         LocalDateTime now = LocalDateTime.now();
         LocalDateTime max = LocalDateTime.MAX;
 
@@ -169,8 +169,8 @@ class BookingServiceImplTest {
         when(mockBookingRepository.save(any()))
                 .thenReturn(booking);
 
-        long itemId = item.getId();
-        long userId = 99L;
+        Long itemId = item.getId();
+        Long userId = 99L;
 
         assertThat(booking, equalTo(bookingService.save(itemId, start, LocalDateTime.MAX, userId)));
         verify(mockItemRepository, times(1)).findById(anyLong());
@@ -183,14 +183,14 @@ class BookingServiceImplTest {
         when(mockUserRepository.findById(anyLong()))
                 .thenReturn(Optional.empty());
 
-        long userId = 99L;
+        Long userId = 99L;
         assertThrows(NotFoundException.class, () -> bookingService.findByUserId(userId, "ALL", page));
         verify(mockUserRepository, times(1)).findById(anyLong());
     }
 
     @Test
     void shouldUpdateBookingStatusToApproved() {
-        long bookingId = 1L;
+        Long bookingId = 1L;
         long userId = 3L;
         user.setId(2L);
 

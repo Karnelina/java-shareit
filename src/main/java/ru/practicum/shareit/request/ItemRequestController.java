@@ -29,17 +29,17 @@ public class ItemRequestController {
 
     @PostMapping
     public ItemRequest saveItemRequest(@Valid @RequestBody ItemRequestRequestDto dto,
-                                       @RequestHeader(REQUEST_HEADER_USER_ID) long userId) {
+                                       @RequestHeader(REQUEST_HEADER_USER_ID) Long userId) {
         return itemRequestService.saveItemRequest(dto.getDescription(), userId);
     }
 
     @GetMapping
-    public Collection<ItemRequestResponseDto> findOwnItemRequests(@RequestHeader(REQUEST_HEADER_USER_ID) long userId) {
+    public Collection<ItemRequestResponseDto> findOwnItemRequests(@RequestHeader(REQUEST_HEADER_USER_ID) Long userId) {
         return itemRequestService.findOwnItemRequests(userId);
     }
 
     @GetMapping("/all")
-    public Collection<ItemRequestResponseDto> findAllItemRequests(@RequestHeader(REQUEST_HEADER_USER_ID) long userId,
+    public Collection<ItemRequestResponseDto> findAllItemRequests(@RequestHeader(REQUEST_HEADER_USER_ID) Long userId,
                                                                   @RequestParam(defaultValue = PAGE_DEFAULT_FROM) @PositiveOrZero Short from,
                                                                   @RequestParam(defaultValue = PAGE_DEFAULT_SIZE) @Positive Short size) {
 
@@ -48,8 +48,8 @@ public class ItemRequestController {
     }
 
     @GetMapping("/{requestId}")
-    public ItemRequestResponseDto findItemRequestById(@RequestHeader(REQUEST_HEADER_USER_ID) long userId,
-                                                      @PathVariable long requestId) {
+    public ItemRequestResponseDto findItemRequestById(@RequestHeader(REQUEST_HEADER_USER_ID) Long userId,
+                                                      @PathVariable Long requestId) {
         return itemRequestService.findItemRequestsById(userId, requestId);
     }
 }

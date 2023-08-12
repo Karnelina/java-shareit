@@ -29,7 +29,7 @@ public class ItemRequestServiceImpl implements ItemRequestService {
     private final ItemRepository itemRepository;
 
     @Override
-    public ItemRequest saveItemRequest(String description, long userId) {
+    public ItemRequest saveItemRequest(String description, Long userId) {
         User requestor = userRepository.findById(userId).orElseThrow(() ->
                 new NotFoundException(String.format("Пользователь %s не найден.", userId)));
 
@@ -44,7 +44,7 @@ public class ItemRequestServiceImpl implements ItemRequestService {
 
     @Override
     @Transactional(readOnly = true)
-    public Collection<ItemRequestResponseDto> findOwnItemRequests(long userId) {
+    public Collection<ItemRequestResponseDto> findOwnItemRequests(Long userId) {
         User requestor = userRepository.findById(userId).orElseThrow(() ->
                 new NotFoundException(String.format("Пользователь %s не найден.", userId)));
 
@@ -66,7 +66,7 @@ public class ItemRequestServiceImpl implements ItemRequestService {
 
     @Override
     @Transactional(readOnly = true)
-    public Collection<ItemRequestResponseDto> findAllItemRequests(long userId, Pageable page) {
+    public Collection<ItemRequestResponseDto> findAllItemRequests(Long userId, Pageable page) {
         User user = userRepository.findById(userId).orElseThrow(() ->
                 new NotFoundException(String.format("Пользователь %s не найден.", userId)));
 
@@ -76,7 +76,7 @@ public class ItemRequestServiceImpl implements ItemRequestService {
     }
 
     @Override
-    public ItemRequestResponseDto findItemRequestsById(long userId, long requestId) {
+    public ItemRequestResponseDto findItemRequestsById(Long userId, Long requestId) {
         userRepository.findById(userId).orElseThrow(() ->
                 new NotFoundException(String.format("Пользователь %s не найден.", userId)));
 

@@ -73,7 +73,7 @@ class UserServiceImplTests {
 
     @Test
     void shouldFindByIdUser() {
-        long userId = user.getId();
+        Long userId = user.getId();
 
         when(mockUserRepository.findById(userId))
                 .thenReturn(Optional.ofNullable(user));

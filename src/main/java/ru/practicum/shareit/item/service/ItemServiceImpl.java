@@ -46,7 +46,7 @@ public class ItemServiceImpl implements ItemService {
     private final ItemRequestRepository requestRepository;
 
     @Override
-    public Item save(ItemDto itemDto, long ownerId) {
+    public Item save(ItemDto itemDto, Long ownerId) {
         Item item = ItemMapper.INSTANCE.mapToItem(itemDto);
 
         User owner = userRepository.findById(ownerId).orElseThrow(() ->
@@ -65,11 +65,11 @@ public class ItemServiceImpl implements ItemService {
     }
 
     @Override
-    public Item update(Item item, long itemId, long userId) {
+    public Item update(Item item, Long itemId, Long userId) {
         Item updatedItem = itemRepository.findById(itemId).orElseThrow(() ->
                 new NotFoundException(String.format("Предмет не найден: %s", item)));
 
-        if (updatedItem.getOwner().getId() != userId) {
+        if (!Objects.equals(updatedItem.getOwner().getId(), userId)) {
             throw new NotFoundException(
                     String.format("У пользователя %d нету предмета %s.", userId, item));
         }
@@ -91,14 +91,14 @@ public class ItemServiceImpl implements ItemService {
 
     @Override
     @Transactional(readOnly = true)
-    public ItemAllFieldsDto findById(long userId, long itemId) {
+    public ItemAllFieldsDto findById(Long userId, Long itemId) {
         Item item = itemRepository.findById(itemId).orElseThrow(() ->
                 new NotFoundException(String.format("Item %s не найден.", itemId)));
 
         return findItemsDto(Collections.singletonList(item), userId).get(0);
     }
 
-    private List<ItemAllFieldsDto> findItemsDto(List<Item> items, long userId) {
+    private List<ItemAllFieldsDto> findItemsDto(List<Item> items, Long userId) {
         if (items == null || items.isEmpty()) {
             return Collections.emptyList();
         }
@@ -142,7 +142,7 @@ public class ItemServiceImpl implements ItemService {
 
     @Override
     @Transactional(readOnly = true)
-    public Collection<ItemAllFieldsDto> searchByText(String text, long userId, Pageable page) {
+    public Collection<ItemAllFieldsDto> searchByText(String text, Long userId, Pageable page) {
         if (text.isBlank()) {
             return Collections.emptyList();
         }
@@ -153,13 +153,13 @@ public class ItemServiceImpl implements ItemService {
 
     @Override
     @Transactional(readOnly = true)
-    public Collection<ItemAllFieldsDto> findItemsByUserId(long userId, Pageable page) {
+    public Collection<ItemAllFieldsDto> findItemsByUserId(Long userId, Pageable page) {
         List<Item> items = itemRepository.findAllByOwnerId(userId, page);
         return findItemsDto(items, userId);
     }
 
     @Override
-    public CommentResponseDto saveComment(long itemId, long userId, String text) {
+    public CommentResponseDto saveComment(Long itemId, Long userId, String text) {
         if (text.isBlank()) {
             throw new ValidationException("Комментарий не может быть пустым");
         }
