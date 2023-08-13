@@ -31,28 +31,28 @@ public class ItemController {
 
     @PostMapping
     public ItemDto saveItem(@Validated(Create.class) @RequestBody ItemDto itemDto,
-                            @RequestHeader(REQUEST_HEADER_USER_ID) Long userId) {
+                            @RequestHeader(REQUEST_HEADER_USER_ID) long userId) {
         Item item = itemService.save(itemDto, userId);
-        return ItemMapper.INSTANCE.mapToItemDto(item);
+        return ItemMapper.mapToItemDto(item);
     }
 
     @PatchMapping("/{itemId}")
     public ItemDto updateItem(@Validated(Update.class) @RequestBody ItemDto itemDto,
-                              @RequestHeader(REQUEST_HEADER_USER_ID) Long userId,
-                              @PathVariable Long itemId) {
-        Item item = itemService.update(ItemMapper.INSTANCE.mapToItem(itemDto), itemId, userId);
-        return ItemMapper.INSTANCE.mapToItemDto(item);
+                              @RequestHeader(REQUEST_HEADER_USER_ID) long userId,
+                              @PathVariable long itemId) {
+        Item item = itemService.update(ItemMapper.mapToItem(itemDto), itemId, userId);
+        return ItemMapper.mapToItemDto(item);
     }
 
     @GetMapping("/{itemId}")
-    public ItemAllFieldsDto findItemById(@RequestHeader(REQUEST_HEADER_USER_ID) Long userId,
-                                         @PathVariable Long itemId) {
+    public ItemAllFieldsDto findItemById(@RequestHeader(REQUEST_HEADER_USER_ID) long userId,
+                                         @PathVariable long itemId) {
 
         return itemService.findById(userId, itemId);
     }
 
     @GetMapping
-    public Collection<ItemAllFieldsDto> findItemsByUserId(@RequestHeader(REQUEST_HEADER_USER_ID) Long userId,
+    public Collection<ItemAllFieldsDto> findItemsByUserId(@RequestHeader(REQUEST_HEADER_USER_ID) long userId,
                                                           @RequestParam(defaultValue = PAGE_DEFAULT_FROM) @PositiveOrZero Short from,
                                                           @RequestParam(defaultValue = PAGE_DEFAULT_SIZE) @PositiveOrZero Short size) {
 
@@ -63,7 +63,7 @@ public class ItemController {
 
     @GetMapping("/search")
     public Collection<ItemAllFieldsDto> searchByText(@RequestParam(name = "text") String text,
-                                                     @RequestHeader(REQUEST_HEADER_USER_ID) Long userId,
+                                                     @RequestHeader(REQUEST_HEADER_USER_ID) long userId,
                                                      @RequestParam(defaultValue = PAGE_DEFAULT_FROM) @PositiveOrZero Short from,
                                                      @RequestParam(defaultValue = PAGE_DEFAULT_SIZE) @PositiveOrZero Short size) {
 
@@ -74,7 +74,7 @@ public class ItemController {
     }
 
     @PostMapping("/{itemId}/comment")
-    public CommentResponseDto saveComment(@PathVariable Long itemId, @RequestHeader(REQUEST_HEADER_USER_ID) Long userId,
+    public CommentResponseDto saveComment(@PathVariable long itemId, @RequestHeader(REQUEST_HEADER_USER_ID) long userId,
                                           @RequestBody CommentRequestDto commentRequestDto) {
 
         return itemService.saveComment(itemId, userId, commentRequestDto.getText());

@@ -22,7 +22,7 @@ class BookingMapperTests {
                 .booker(user)
                 .build();
 
-        GetItemBookingDto bookingDto = BookingMapper.INSTANCE.mapFromBookingToBookingDto(booking);
+        GetItemBookingDto bookingDto = BookingMapper.mapFromBookingToBookingDto(booking);
 
         assertThat(bookingDto.getId(), equalTo(booking.getId()));
         assertThat(bookingDto.getBookerId(), equalTo(booking.getBooker().getId()));

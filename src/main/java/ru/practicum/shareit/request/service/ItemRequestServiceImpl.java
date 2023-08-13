@@ -56,10 +56,11 @@ public class ItemRequestServiceImpl implements ItemRequestService {
                     List<ItemGetOwnItemRequestDto> items = map
                             .getOrDefault(itemRequest, Collections.emptyList())
                             .stream()
-                            .map(ItemMapper.INSTANCE::mapFromItemToItemGetOwnItemRequestDto)
+                            .map(ItemMapper::mapFromItemToItemGetOwnItemRequestDto)
                             .collect(Collectors.toList());
 
-                    return ItemRequestMapper.INSTANCE.mapToItemRequestResponseDtoWithItemId(itemRequest, items);
+                    return ItemRequestMapper
+                            .mapToItemRequestResponseDtoWithItemId(itemRequest, items);
                 })
                 .collect(Collectors.toList());
     }
@@ -93,9 +94,9 @@ public class ItemRequestServiceImpl implements ItemRequestService {
                     List<ItemGetOwnItemRequestDto> itemDtos = Optional.ofNullable(entry.getValue())
                             .orElse(Collections.emptyList())
                             .stream()
-                            .map(ItemMapper.INSTANCE::mapFromItemToItemGetOwnItemRequestDto)
+                            .map(ItemMapper::mapFromItemToItemGetOwnItemRequestDto)
                             .collect(Collectors.toList());
-                    return ItemRequestMapper.INSTANCE.mapToItemRequestResponseDtoWithItemId(entry.getKey(), itemDtos);
+                    return ItemRequestMapper.mapToItemRequestResponseDtoWithItemId(entry.getKey(), itemDtos);
                 })
                 .collect(Collectors.toList());
     }

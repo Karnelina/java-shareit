@@ -7,11 +7,12 @@ import ru.practicum.shareit.user.model.User;
 import javax.persistence.*;
 
 @Data
-@Builder
+@Builder(toBuilder = true)
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-@Table(name = "items")
+@EqualsAndHashCode(exclude = {"itemRequest", "owner"})
+@Table(name = "items", schema = "public")
 public class Item {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

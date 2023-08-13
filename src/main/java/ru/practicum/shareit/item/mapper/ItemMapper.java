@@ -1,45 +1,65 @@
 package ru.practicum.shareit.item.mapper;
 
-import org.mapstruct.Mapper;
-import org.mapstruct.Mapping;
-import org.mapstruct.Named;
-import org.mapstruct.factory.Mappers;
+import lombok.experimental.UtilityClass;
 import ru.practicum.shareit.booking.dto.GetItemBookingDto;
 import ru.practicum.shareit.item.dto.CommentResponseDto;
 import ru.practicum.shareit.item.dto.ItemAllFieldsDto;
 import ru.practicum.shareit.item.dto.ItemDto;
 import ru.practicum.shareit.item.dto.ItemGetOwnItemRequestDto;
 import ru.practicum.shareit.item.model.Item;
-import ru.practicum.shareit.request.model.ItemRequest;
 
 import java.util.Collection;
 
-@Mapper(componentModel = "spring")
-public interface ItemMapper {
-    ItemMapper INSTANCE = Mappers.getMapper(ItemMapper.class);
-
-    @Mapping(source = "itemRequest.id", target = "requestId")
-    ItemDto mapToItemDto(Item item);
-
-    @Mapping(source = "itemRequest.id", target = "requestId")
-    ItemGetOwnItemRequestDto mapFromItemToItemGetOwnItemRequestDto(Item item);
-
-    default Long mapItemRequestToLong(ItemRequest itemRequest) {
-        return itemRequest != null ? itemRequest.getId() : 0L;
+@UtilityClass
+public class ItemMapper {
+    public Item mapToItem(ItemDto itemDto) {
+        return Item.builder()
+                .id(itemDto.getId())
+                .name(itemDto.getName())
+                .description(itemDto.getDescription())
+                .available(itemDto.getAvailable())
+                .build();
     }
 
-    @Mapping(source = "id", target = "id", qualifiedByName = "getIdToString")
-    Item mapToItem(ItemDto itemDto);
-
-    @Named("getIdToString")
-    default Long getIdToString(Long id) {
-        return id;
+    public ItemDto mapToItemDto(Item item) {
+        if (item.getItemRequest() == null) {
+            return ItemDto.builder()
+                    .id(item.getId())
+                    .name(item.getName())
+                    .description(item.getDescription())
+                    .available(item.getAvailable())
+                    .build();
+        } else {
+            return ItemDto.builder()
+                    .id(item.getId())
+                    .name(item.getName())
+                    .description(item.getDescription())
+                    .available(item.getAvailable())
+                    .requestId(item.getItemRequest().getId())
+                    .build();
+        }
     }
 
-    @Mapping(source = "id", target = "id")
-    GetItemBookingDto mapLongToBookingDtoId(Long id);
+    public ItemAllFieldsDto mapToItemAllFieldsDto(Item item, GetItemBookingDto lastBooking,
+                                                  GetItemBookingDto nextBooking, Collection<CommentResponseDto> comments) {
+        return ItemAllFieldsDto.builder()
+                .id(item.getId())
+                .name(item.getName())
+                .description(item.getDescription())
+                .available(item.getAvailable())
+                .lastBooking(lastBooking)
+                .nextBooking(nextBooking)
+                .comments(comments)
+                .build();
+    }
 
-    @Mapping(source = "item.id", target = "id")
-    ItemAllFieldsDto mapToItemAllFieldsDto(Item item, GetItemBookingDto lastBooking,
-                                           GetItemBookingDto nextBooking, Collection<CommentResponseDto> comments);
+    public ItemGetOwnItemRequestDto mapFromItemToItemGetOwnItemRequestDto(Item item) {
+        return ItemGetOwnItemRequestDto.builder()
+                .id(item.getId())
+                .name(item.getName())
+                .description(item.getDescription())
+                .requestId(item.getItemRequest().getId())
+                .available(item.getAvailable())
+                .build();
+    }
 }

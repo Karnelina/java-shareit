@@ -1,30 +1,27 @@
 package ru.practicum.shareit.booking.dto;
 
-import org.mapstruct.Mapper;
-import org.mapstruct.Mapping;
-import org.mapstruct.factory.Mappers;
+import lombok.experimental.UtilityClass;
 import ru.practicum.shareit.booking.model.Booking;
 import ru.practicum.shareit.item.dto.ItemShortDto;
-import ru.practicum.shareit.item.model.Item;
 import ru.practicum.shareit.user.dto.UserShortDto;
-import ru.practicum.shareit.user.model.User;
 
-@Mapper(componentModel = "spring")
-public interface BookingMapper {
-    BookingMapper INSTANCE = Mappers.getMapper(BookingMapper.class);
-
-    @Mapping(target = "item", expression = "java(mapToGetBookingItemDto(booking.getItem()))")
-    @Mapping(target = "booker", expression = "java(mapToGetBookingUserDto(booking.getBooker()))")
-    BookingAllFieldsDto mapToBookingAllFieldsDto(Booking booking);
-
-    @Mapping(source = "booker.id", target = "bookerId")
-    GetItemBookingDto mapFromBookingToBookingDto(Booking booking);
-
-    default ItemShortDto mapToGetBookingItemDto(Item item) {
-        return new ItemShortDto(item.getId(), item.getName());
+@UtilityClass
+public class BookingMapper {
+    public BookingAllFieldsDto mapToBookingAllFieldsDto(Booking booking) {
+        return BookingAllFieldsDto.builder()
+                .id(booking.getId())
+                .start(booking.getStart())
+                .end(booking.getEnd())
+                .item(new ItemShortDto(booking.getItem().getId(), booking.getItem().getName()))
+                .booker(new UserShortDto(booking.getBooker().getId()))
+                .status(booking.getStatus())
+                .build();
     }
 
-    default UserShortDto mapToGetBookingUserDto(User user) {
-        return new UserShortDto(user.getId());
+    public GetItemBookingDto mapFromBookingToBookingDto(Booking booking) {
+        return GetItemBookingDto.builder()
+                .id(booking.getId())
+                .bookerId(booking.getBooker().getId())
+                .build();
     }
 }

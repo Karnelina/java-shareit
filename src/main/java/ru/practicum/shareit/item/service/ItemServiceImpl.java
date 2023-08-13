@@ -46,8 +46,8 @@ public class ItemServiceImpl implements ItemService {
     private final ItemRequestRepository requestRepository;
 
     @Override
-    public Item save(ItemDto itemDto, Long ownerId) {
-        Item item = ItemMapper.INSTANCE.mapToItem(itemDto);
+    public Item save(ItemDto itemDto, long ownerId) {
+        Item item = ItemMapper.mapToItem(itemDto);
 
         User owner = userRepository.findById(ownerId).orElseThrow(() ->
                 new NotFoundException(String.format("Пользователь %s не найден.", ownerId)));
@@ -65,11 +65,11 @@ public class ItemServiceImpl implements ItemService {
     }
 
     @Override
-    public Item update(Item item, Long itemId, Long userId) {
+    public Item update(Item item, long itemId, long userId) {
         Item updatedItem = itemRepository.findById(itemId).orElseThrow(() ->
                 new NotFoundException(String.format("Предмет не найден: %s", item)));
 
-        if (!Objects.equals(updatedItem.getOwner().getId(), userId)) {
+        if (updatedItem.getOwner().getId() != userId) {
             throw new NotFoundException(
                     String.format("У пользователя %d нету предмета %s.", userId, item));
         }
@@ -91,14 +91,14 @@ public class ItemServiceImpl implements ItemService {
 
     @Override
     @Transactional(readOnly = true)
-    public ItemAllFieldsDto findById(Long userId, Long itemId) {
+    public ItemAllFieldsDto findById(long userId, long itemId) {
         Item item = itemRepository.findById(itemId).orElseThrow(() ->
                 new NotFoundException(String.format("Item %s не найден.", itemId)));
 
         return findItemsDto(Collections.singletonList(item), userId).get(0);
     }
 
-    private List<ItemAllFieldsDto> findItemsDto(List<Item> items, Long userId) {
+    private List<ItemAllFieldsDto> findItemsDto(List<Item> items, long userId) {
         if (items == null || items.isEmpty()) {
             return Collections.emptyList();
         }
@@ -124,7 +124,7 @@ public class ItemServiceImpl implements ItemService {
                     List<CommentResponseDto> itemComments = commentsMap
                             .getOrDefault(item, Collections.emptyList())
                             .stream()
-                            .map(CommentMapper.INSTANCE::mapToCommentResponseDto)
+                            .map(CommentMapper::mapToCommentResponseDto)
                             .collect(Collectors.toList());
 
                     List<Booking> itemBookings = bookingsMap.getOrDefault(item, Collections.emptyList());
@@ -132,17 +132,17 @@ public class ItemServiceImpl implements ItemService {
                     Optional<Booking> lastOptional = getLastItem(itemBookings);
                     Optional<Booking> nextOptional = getNextItem(itemBookings);
 
-                    GetItemBookingDto last = lastOptional.map(BookingMapper.INSTANCE::mapFromBookingToBookingDto).orElse(null);
-                    GetItemBookingDto next = nextOptional.map(BookingMapper.INSTANCE::mapFromBookingToBookingDto).orElse(null);
+                    GetItemBookingDto last = lastOptional.map(BookingMapper::mapFromBookingToBookingDto).orElse(null);
+                    GetItemBookingDto next = nextOptional.map(BookingMapper::mapFromBookingToBookingDto).orElse(null);
 
-                    return ItemMapper.INSTANCE.mapToItemAllFieldsDto(item, last, next, itemComments);
+                    return ItemMapper.mapToItemAllFieldsDto(item, last, next, itemComments);
                 })
                 .collect(Collectors.toList());
     }
 
     @Override
     @Transactional(readOnly = true)
-    public Collection<ItemAllFieldsDto> searchByText(String text, Long userId, Pageable page) {
+    public Collection<ItemAllFieldsDto> searchByText(String text, long userId, Pageable page) {
         if (text.isBlank()) {
             return Collections.emptyList();
         }
@@ -153,13 +153,13 @@ public class ItemServiceImpl implements ItemService {
 
     @Override
     @Transactional(readOnly = true)
-    public Collection<ItemAllFieldsDto> findItemsByUserId(Long userId, Pageable page) {
+    public Collection<ItemAllFieldsDto> findItemsByUserId(long userId, Pageable page) {
         List<Item> items = itemRepository.findAllByOwnerId(userId, page);
         return findItemsDto(items, userId);
     }
 
     @Override
-    public CommentResponseDto saveComment(Long itemId, Long userId, String text) {
+    public CommentResponseDto saveComment(long itemId, long userId, String text) {
         if (text.isBlank()) {
             throw new ValidationException("Комментарий не может быть пустым");
         }
@@ -188,7 +188,7 @@ public class ItemServiceImpl implements ItemService {
                 .build();
 
         Comment savedComment = commentRepository.save(comment);
-        return CommentMapper.INSTANCE.mapToCommentResponseDto(savedComment);
+        return CommentMapper.mapToCommentResponseDto(savedComment);
     }
 
     private Optional<Booking> getNextItem(List<Booking> bookings) {
@@ -208,5 +208,4 @@ public class ItemServiceImpl implements ItemService {
                         t.getStatus().equals(Status.APPROVED))
                 .findFirst();
     }
-
 }

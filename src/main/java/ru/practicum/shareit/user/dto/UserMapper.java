@@ -1,14 +1,23 @@
 package ru.practicum.shareit.user.dto;
 
-import org.mapstruct.Mapper;
-import org.mapstruct.factory.Mappers;
+import lombok.experimental.UtilityClass;
 import ru.practicum.shareit.user.model.User;
 
-@Mapper(componentModel = "spring")
-public interface UserMapper {
-    UserMapper INSTANCE = Mappers.getMapper(UserMapper.class);
+@UtilityClass
+public class UserMapper {
+    public User mapToUser(UserDto userDto) {
+        return User.builder()
+                .id(userDto.getId())
+                .name(userDto.getName())
+                .email(userDto.getEmail())
+                .build();
+    }
 
-    User mapToUser(UserDto userDto);
-
-    UserDto mapToUserDto(User user);
+    public UserDto mapToUserDto(User user) {
+        return UserDto.builder()
+                .id(user.getId())
+                .name(user.getName())
+                .email(user.getEmail())
+                .build();
+    }
 }

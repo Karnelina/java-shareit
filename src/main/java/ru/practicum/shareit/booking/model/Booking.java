@@ -8,13 +8,12 @@ import javax.persistence.*;
 import java.time.LocalDateTime;
 
 
+@Data
 @Builder(toBuilder = true)
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-@Getter
-@Setter
-@ToString
+@EqualsAndHashCode(exclude = {"item", "booker"})
 @Table(name = "bookings", schema = "public")
 public class Booking {
     @Id

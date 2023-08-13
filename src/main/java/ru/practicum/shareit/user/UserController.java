@@ -17,27 +17,26 @@ import java.util.stream.Collectors;
 @RestController
 @RequestMapping(path = "/users")
 @RequiredArgsConstructor
-@Validated
 @ToLog
 public class UserController {
     private final UserService userService;
 
     @PostMapping
     public UserDto saveUser(@Validated(Create.class) @RequestBody UserDto userDto) {
-        User user = userService.save(UserMapper.INSTANCE.mapToUser(userDto));
-        return UserMapper.INSTANCE.mapToUserDto(user);
+        User user = userService.save(UserMapper.mapToUser(userDto));
+        return UserMapper.mapToUserDto(user);
     }
 
     @PatchMapping("/{userId}")
-    public UserDto updateUser(@Validated(Update.class) @RequestBody UserDto userDto, @PathVariable Long userId) {
-        User user = userService.update(UserMapper.INSTANCE.mapToUser(userDto), userId);
-        return UserMapper.INSTANCE.mapToUserDto(user);
+    public UserDto updateUser(@Validated(Update.class) @RequestBody UserDto userDto, @PathVariable long userId) {
+        User user = userService.update(UserMapper.mapToUser(userDto), userId);
+        return UserMapper.mapToUserDto(user);
     }
 
     @GetMapping("/{id}")
-    public UserDto findUserById(@PathVariable Long id) {
+    public UserDto findUserById(@PathVariable long id) {
         User user = userService.findById(id);
-        return UserMapper.INSTANCE.mapToUserDto(user);
+        return UserMapper.mapToUserDto(user);
     }
 
     @GetMapping
@@ -45,12 +44,12 @@ public class UserController {
         return userService
                 .findAll()
                 .stream()
-                .map(UserMapper.INSTANCE::mapToUserDto)
+                .map(UserMapper::mapToUserDto)
                 .collect(Collectors.toList());
     }
 
     @DeleteMapping("/{id}")
-    public void deleteUserById(@PathVariable Long id) {
+    public void deleteUserById(@PathVariable long id) {
         userService.deleteById(id);
     }
 }
