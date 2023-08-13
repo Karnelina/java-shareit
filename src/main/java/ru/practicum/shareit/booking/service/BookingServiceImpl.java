@@ -32,7 +32,7 @@ public class BookingServiceImpl implements BookingService {
     private final UserRepository userRepository;
 
     @Override
-    public Booking save(Long itemId, LocalDateTime start, LocalDateTime end, Long bookerId) {
+    public Booking save(long itemId, LocalDateTime start, LocalDateTime end, long bookerId) {
         Item item = itemRepository.findById(itemId).orElseThrow(() ->
                 new NotFoundException(String.format("Вещь %s не найдена.", itemId)));
 
@@ -43,6 +43,14 @@ public class BookingServiceImpl implements BookingService {
 
         if (!item.getAvailable()) {
             throw new ValidationException("Вещь должна быть доступна для бронирования");
+        }
+
+        if (end.isBefore(LocalDateTime.now()) || start.equals(end)) {
+            throw new ValidationException("Время начала бронирования не может совпадать со временем его окончания");
+        }
+
+        if (end.isBefore(start)) {
+            throw new ValidationException("Время окончания бронирования не может быть раньше времени его начала");
         }
 
         User booker = userRepository.findById(bookerId).orElseThrow(() ->
@@ -61,7 +69,7 @@ public class BookingServiceImpl implements BookingService {
 
     @Override
     @Transactional(readOnly = true)
-    public Collection<Booking> findByUserId(Long userId, String stateString, Pageable page) {
+    public Collection<Booking> findByUserId(long userId, String stateString, Pageable page) {
         User user = userRepository.findById(userId).orElseThrow(
                 () -> new NotFoundException(String.format("Пользователь %s не найден.", userId))
         );
@@ -103,7 +111,7 @@ public class BookingServiceImpl implements BookingService {
     }
 
     @Override
-    public Booking updateAvailableStatus(Long bookingId, Boolean state, Long userId) {
+    public Booking updateAvailableStatus(long bookingId, Boolean state, long userId) {
         Booking booking = bookingRepository.findById(bookingId).orElseThrow(
                 () -> new NotFoundException(String.format("Бронирование %s не найдено.", bookingId)));
 
@@ -125,7 +133,7 @@ public class BookingServiceImpl implements BookingService {
     }
 
     @Override
-    public Booking findAllBookingsByUserId(Long bookingId, Long userId) {
+    public Booking findAllBookingsByUserId(long bookingId, long userId) {
         Booking booking = bookingRepository.findById(bookingId).orElseThrow(() ->
                 new NotFoundException(
                         String.format("У пользователя %s бронирование %s не найдено.", userId, bookingId)));
@@ -143,7 +151,7 @@ public class BookingServiceImpl implements BookingService {
 
     @Override
     @Transactional(readOnly = true)
-    public Collection<Booking> findOwnerBookings(Long userId, String stateString, Pageable page) {
+    public Collection<Booking> findOwnerBookings(long userId, String stateString, Pageable page) {
         User user = userRepository.findById(userId).orElseThrow(
                 () -> new NotFoundException(String.format("Пользователь %s не найден.", userId))
         );

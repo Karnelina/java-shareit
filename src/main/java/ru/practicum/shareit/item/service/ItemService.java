@@ -9,15 +9,15 @@ import ru.practicum.shareit.item.model.Item;
 import java.util.Collection;
 
 public interface ItemService {
-    Item save(ItemDto  item, Long userId);
+    Item save(ItemDto item, long userId);
 
-    Item update(Item item, Long itemId, Long userId);
+    Item update(Item item, long itemId, long userId);
 
-    ItemAllFieldsDto findById(Long userId, Long itemId);
+    ItemAllFieldsDto findById(long userId, long itemId);
 
-    Collection<ItemAllFieldsDto> searchByText(String text, Long userId, Pageable page);
+    Collection<ItemAllFieldsDto> searchByText(String text, long userId, Pageable page);
 
-    Collection<ItemAllFieldsDto> findItemsByUserId(Long userId, Pageable page);
+    Collection<ItemAllFieldsDto> findItemsByUserId(long userId, Pageable page);
 
-    CommentResponseDto saveComment(Long itemId, Long userId, String text);
+    CommentResponseDto saveComment(long itemId, long userId, String text);
 }

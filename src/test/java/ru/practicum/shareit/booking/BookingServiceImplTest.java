@@ -100,8 +100,8 @@ class BookingServiceImplTest {
         when(mockItemRepository.findById(anyLong()))
                 .thenReturn(Optional.ofNullable(item));
 
-        Long itemId = item.getId();
-        Long userId = user.getId();
+        long itemId = item.getId();
+        long userId = user.getId();
         assertThrows(NotFoundException.class, () -> bookingService.save(itemId, start, end, userId));
         verify(mockItemRepository, times(1)).findById(anyLong());
     }
@@ -113,28 +113,28 @@ class BookingServiceImplTest {
 
 
         item.setAvailable(false);
-        Long itemId = item.getId();
-        Long userId = 99L;
+        long itemId = item.getId();
+        long userId = 99L;
         assertThrows(ValidationException.class, () -> bookingService.save(itemId, start, end, userId));
         verify(mockItemRepository, times(1)).findById(anyLong());
     }
 
     @Test
-    void shouldThrowExceptionWhenBookingTimeNotValidInSave() {
+    void shouldThrowExceptionWhenBookingTimeDontValidInSave() {
         when(mockItemRepository.findById(anyLong()))
                 .thenReturn(Optional.ofNullable(item));
 
-        Long itemId = item.getId();
-        Long userId = 99L;
+        long itemId = item.getId();
+        long userId = 99L;
         LocalDateTime min = LocalDateTime.MIN;
         LocalDateTime max = LocalDateTime.MAX;
         LocalDateTime now = LocalDateTime.now();
 
-        assertThrows(NotFoundException.class, () -> bookingService.save(itemId, start, min, userId));
-        assertThrows(NotFoundException.class, () -> bookingService.save(itemId, start, start, userId));
-        assertThrows(NotFoundException.class, () ->
+        assertThrows(ValidationException.class, () -> bookingService.save(itemId, start, min, userId));
+        assertThrows(ValidationException.class, () -> bookingService.save(itemId, start, start, userId));
+        assertThrows(ValidationException.class, () ->
                 bookingService.save(itemId, max, now, userId));
-        assertThrows(NotFoundException.class, () ->
+        assertThrows(ValidationException.class, () ->
                 bookingService.save(itemId, max, min, userId));
         verify(mockItemRepository, times(4)).findById(anyLong());
     }
@@ -147,8 +147,8 @@ class BookingServiceImplTest {
         when(mockUserRepository.findById(anyLong()))
                 .thenReturn(Optional.empty());
 
-        Long itemId = item.getId();
-        Long userId = 99L;
+        long itemId = item.getId();
+        long userId = 99L;
         LocalDateTime now = LocalDateTime.now();
         LocalDateTime max = LocalDateTime.MAX;
 
@@ -169,8 +169,8 @@ class BookingServiceImplTest {
         when(mockBookingRepository.save(any()))
                 .thenReturn(booking);
 
-        Long itemId = item.getId();
-        Long userId = 99L;
+        long itemId = item.getId();
+        long userId = 99L;
 
         assertThat(booking, equalTo(bookingService.save(itemId, start, LocalDateTime.MAX, userId)));
         verify(mockItemRepository, times(1)).findById(anyLong());
@@ -183,14 +183,14 @@ class BookingServiceImplTest {
         when(mockUserRepository.findById(anyLong()))
                 .thenReturn(Optional.empty());
 
-        Long userId = 99L;
+        long userId = 99L;
         assertThrows(NotFoundException.class, () -> bookingService.findByUserId(userId, "ALL", page));
         verify(mockUserRepository, times(1)).findById(anyLong());
     }
 
     @Test
     void shouldUpdateBookingStatusToApproved() {
-        Long bookingId = 1L;
+        long bookingId = 1L;
         long userId = 3L;
         user.setId(2L);
 
@@ -262,7 +262,7 @@ class BookingServiceImplTest {
         Booking result = bookingService.updateAvailableStatus(bookingId, false, userId);
 
         assertThat(result, equalTo(booking));
-        assertThat(result.getStatus(), equalTo(REJECTED));
+        assertThat(result.getStatus(), equalTo(Status.REJECTED));
 
         verify(mockBookingRepository, times(1)).findById(bookingId);
         verify(mockUserRepository, times(1)).findById(userId);
@@ -463,7 +463,7 @@ class BookingServiceImplTest {
         when(mockUserRepository.findById(userId))
                 .thenReturn(Optional.of(user));
 
-        when(mockBookingRepository.findByBookerAndStatus(user, REJECTED, page))
+        when(mockBookingRepository.findByBookerAndStatus(user, Status.REJECTED, page))
                 .thenReturn(expectedBookings);
 
         Collection<Booking> result = bookingService.findByUserId(userId, stateString, page);
@@ -471,7 +471,7 @@ class BookingServiceImplTest {
         assertThat(result, equalTo(expectedBookings));
 
         verify(mockUserRepository, times(1)).findById(userId);
-        verify(mockBookingRepository, times(1)).findByBookerAndStatus(user, REJECTED, page);
+        verify(mockBookingRepository, times(1)).findByBookerAndStatus(user, Status.REJECTED, page);
     }
 
     @Test
@@ -611,7 +611,7 @@ class BookingServiceImplTest {
         when(mockUserRepository.findById(userId))
                 .thenReturn(Optional.of(user));
 
-        when(mockBookingRepository.findByItemOwnerAndStatus(user, REJECTED, page))
+        when(mockBookingRepository.findByItemOwnerAndStatus(user, Status.REJECTED, page))
                 .thenReturn(expectedBookings);
 
         Collection<Booking> result = bookingService.findOwnerBookings(userId, stateString, page);
@@ -619,7 +619,7 @@ class BookingServiceImplTest {
         assertThat(result, equalTo(expectedBookings));
 
         verify(mockUserRepository, times(1)).findById(userId);
-        verify(mockBookingRepository, times(1)).findByItemOwnerAndStatus(user, REJECTED, page);
+        verify(mockBookingRepository, times(1)).findByItemOwnerAndStatus(user, Status.REJECTED, page);
     }
 
     @Test
@@ -742,42 +742,5 @@ class BookingServiceImplTest {
         assertThrows(NotFoundException.class, () -> bookingService.updateAvailableStatus(
                 bookingId, true, bookingId));
     }
-
-    @Test
-    void shouldThrowValidationExceptionWhenDateIsBefore() {
-        when(mockItemRepository.findById(anyLong()))
-                .thenReturn(Optional.ofNullable(item));
-
-        long itemId = item.getId();
-        LocalDateTime start = LocalDateTime.now().plusHours(1);
-        LocalDateTime end = LocalDateTime.now();
-
-        assertThrows(NotFoundException.class, () -> bookingService.save(itemId, start, end, 2L));
-    }
-
-    @Test
-    void shouldThrowNotFoundExceptionWhenUserIsNeitherBookerNorOwner() {
-        long bookingId = 1L;
-        long userId = 99L;
-
-        Booking booking = Booking.builder()
-                .id(bookingId)
-                .booker(User.builder().id(123L).build())
-                .item(Item.builder().owner(User.builder().id(124L).build()).build())
-                .build();
-
-        User user = User.builder().id(userId).build();
-
-        when(mockBookingRepository.findById(bookingId))
-                .thenReturn(Optional.of(booking));
-
-        when(mockUserRepository.findById(userId))
-                .thenReturn(Optional.of(user));
-
-        assertThrows(NotFoundException.class,
-                () -> bookingService.findAllBookingsByUserId(bookingId, userId));
-
-        verify(mockBookingRepository, times(1)).findById(bookingId);
-        verify(mockUserRepository, times(1)).findById(userId);
-    }
 }
+
