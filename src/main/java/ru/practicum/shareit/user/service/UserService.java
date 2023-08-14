@@ -5,13 +5,14 @@ import ru.practicum.shareit.user.model.User;
 import java.util.Collection;
 
 public interface UserService {
+
     User save(User user);
 
-    User update(User userDto, Long id);
+    User update(User user, long userId);
+
+    User findById(long id);
 
     Collection<User> findAll();
 
-    User findById(Long id);
-
-    void deleteById(Long id);
+    void deleteById(long id);
 }

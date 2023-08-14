@@ -19,7 +19,10 @@ public class ErrorHandler {
     @ExceptionHandler({NotFoundException.class})
     @ResponseStatus(HttpStatus.NOT_FOUND)
     public Map<String, String> handleNotFound(final RuntimeException e) {
-        log.debug("Получен статус 404 Not found {}", e.getMessage(), e);
+        log.debug("Получен статус {} {}. Причина: {}",
+                HttpStatus.NOT_FOUND.value(),
+                HttpStatus.NOT_FOUND.getReasonPhrase(),
+                e.getMessage());
         return Map.of(
                 ERROR_RESPONSE, e.getMessage()
         );
@@ -28,7 +31,10 @@ public class ErrorHandler {
     @ExceptionHandler({AlreadyExistsException.class})
     @ResponseStatus(HttpStatus.CONFLICT)
     public Map<String, String> handleConflict(final RuntimeException e) {
-        log.debug("Получен статус 409 Conflict {}", e.getMessage(), e);
+        log.debug("Получен статус {} {}. Причина: {}",
+                HttpStatus.CONFLICT.value(),
+                HttpStatus.CONFLICT.getReasonPhrase(),
+                e.getMessage());
         return Map.of(
                 ERROR_RESPONSE, e.getMessage()
         );
@@ -38,7 +44,10 @@ public class ErrorHandler {
             NotAvailableException.class, MethodArgumentNotValidException.class})
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public Map<String, String> handleBadRequest(final RuntimeException e) {
-        log.debug("Получен статус 400 Bad request {}", e.getMessage(), e);
+        log.debug("Получен статус {} {}. Причина: {}",
+                HttpStatus.BAD_REQUEST.value(),
+                HttpStatus.BAD_REQUEST.getReasonPhrase(),
+                e.getMessage());
         return Map.of(
                 ERROR_RESPONSE, e.getMessage()
         );
@@ -47,7 +56,10 @@ public class ErrorHandler {
     @ExceptionHandler
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     public Map<String, String> handleRaw(final Throwable e) {
-        log.debug("Получен статус 500 Internal server error {}", e.getMessage(), e);
+        log.debug("Получен статус {} {}. Причина: {}",
+                HttpStatus.INTERNAL_SERVER_ERROR.value(),
+                HttpStatus.INTERNAL_SERVER_ERROR.getReasonPhrase(),
+                e.getMessage());
         return Map.of(
                 ERROR_RESPONSE, e.getMessage()
         );
@@ -55,8 +67,11 @@ public class ErrorHandler {
 
     @ExceptionHandler({ConstraintViolationException.class})
     @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public Map<String, String> catchConstraintViolationException(final ConstraintViolationException e) {
-        log.debug("Получен статус 500 Internal server error {}", e.getMessage(), e);
+    public Map<String, String> handleConstraintViolation(final ConstraintViolationException e) {
+        log.debug("Получен статус {} {}. Причина: {}",
+                HttpStatus.BAD_REQUEST.value(),
+                HttpStatus.BAD_REQUEST.getReasonPhrase(),
+                e.getMessage());
         return Map.of(
                 ERROR_RESPONSE, e.getConstraintViolations()
                         .stream()

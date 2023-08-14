@@ -20,7 +20,7 @@ public class UserDto {
     @NotBlank(groups = {Create.class})
     private String name;
 
-    @Email(groups = {Create.class, Update.class})
     @NotBlank(groups = {Create.class})
+    @Email(groups = {Create.class, Update.class})
     private String email;
 }
