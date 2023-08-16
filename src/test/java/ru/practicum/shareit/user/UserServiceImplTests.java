@@ -88,8 +88,8 @@ class UserServiceImplTests {
         when(mockUserRepository.findById(userId))
                 .thenReturn(Optional.empty());
 
-        assertThrows(NotFoundException.class, () -> userService.findById(userId)
-                , "Ошибка отработала неправильно");
+        assertThrows(NotFoundException.class, () -> userService.findById(userId),
+                "Ошибка отработала неправильно");
         verify(mockUserRepository, times(1)).findById(any());
     }
 
@@ -107,8 +107,8 @@ class UserServiceImplTests {
         when(mockUserRepository.findById(anyLong()))
                 .thenReturn(Optional.empty());
 
-        assertThrows(NotFoundException.class, () -> userService.update(user, 0L)
-                , "Ошибка отработала неправильно");
+        assertThrows(NotFoundException.class, () -> userService.update(user, 0L),
+                "Ошибка отработала неправильно");
         verify(mockUserRepository, times(1)).findById(0L);
     }
 

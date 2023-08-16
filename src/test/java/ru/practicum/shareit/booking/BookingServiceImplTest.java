@@ -102,8 +102,8 @@ class BookingServiceImplTest {
 
         long itemId = item.getId();
         long userId = user.getId();
-        assertThrows(NotFoundException.class, () -> bookingService.save(itemId, start, end, userId)
-                , "Ошибка отработала неправильно");
+        assertThrows(NotFoundException.class, () -> bookingService.save(itemId, start, end, userId),
+                "Ошибка отработала неправильно");
         verify(mockItemRepository, times(1)).findById(anyLong());
     }
 
@@ -116,8 +116,8 @@ class BookingServiceImplTest {
         item.setAvailable(false);
         long itemId = item.getId();
         long userId = 99L;
-        assertThrows(ValidationException.class, () -> bookingService.save(itemId, start, end, userId)
-                , "Ошибка отработала неправильно");
+        assertThrows(ValidationException.class, () -> bookingService.save(itemId, start, end, userId),
+                "Ошибка отработала неправильно");
         verify(mockItemRepository, times(1)).findById(anyLong());
     }
 
@@ -132,16 +132,14 @@ class BookingServiceImplTest {
         LocalDateTime max = LocalDateTime.MAX;
         LocalDateTime now = LocalDateTime.now();
 
-        assertThrows(ValidationException.class, () -> bookingService.save(itemId, start, min, userId)
-                , "Ошибка отработала неправильно");
-        assertThrows(ValidationException.class, () -> bookingService.save(itemId, start, start, userId)
-                , "Ошибка отработала неправильно");
+        assertThrows(ValidationException.class, () -> bookingService.save(itemId, start, min, userId),
+                "Ошибка отработала неправильно");
+        assertThrows(ValidationException.class, () -> bookingService.save(itemId, start, start, userId),
+                "Ошибка отработала неправильно");
         assertThrows(ValidationException.class, () ->
-                        bookingService.save(itemId, max, now, userId)
-                , "Ошибка отработала неправильно");
+                        bookingService.save(itemId, max, now, userId), "Ошибка отработала неправильно");
         assertThrows(ValidationException.class, () ->
-                        bookingService.save(itemId, max, min, userId)
-                , "Ошибка отработала неправильно");
+                        bookingService.save(itemId, max, min, userId), "Ошибка отработала неправильно");
         verify(mockItemRepository, times(4)).findById(anyLong());
     }
 
@@ -190,8 +188,8 @@ class BookingServiceImplTest {
                 .thenReturn(Optional.empty());
 
         long userId = 99L;
-        assertThrows(NotFoundException.class, () -> bookingService.findByUserId(userId, "ALL", page)
-                , "Ошибка отработала неправильно");
+        assertThrows(NotFoundException.class, () -> bookingService.findByUserId(userId, "ALL", page),
+                "Ошибка отработала неправильно");
         verify(mockUserRepository, times(1)).findById(anyLong());
     }
 

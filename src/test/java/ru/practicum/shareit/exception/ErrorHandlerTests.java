@@ -35,8 +35,8 @@ class ErrorHandlerTests {
     void testHandleBadRequest() {
         ValidationException validationException = new ValidationException("Bad request");
         Map<String, String> result = errorHandler.handleBadRequest(validationException);
-        assertEquals(HttpStatus.BAD_REQUEST.toString(), result.get("status")
-                , "Ошибка статуса отработала неправильно");
+        assertEquals(HttpStatus.BAD_REQUEST.toString(), result.get("status"),
+                "Ошибка статуса отработала неправильно");
         assertEquals("Bad request", result.get("message"), "Ошибка отработала неправильно");
     }
 
@@ -44,8 +44,8 @@ class ErrorHandlerTests {
     void testHandleRaw() {
         Throwable throwable = new Throwable("Internal server error");
         Map<String, String> result = errorHandler.handleRaw(throwable);
-        assertEquals(HttpStatus.INTERNAL_SERVER_ERROR.toString(), result.get("status")
-                , "Ошибка статуса отработала неправильно");
+        assertEquals(HttpStatus.INTERNAL_SERVER_ERROR.toString(), result.get("status"),
+                "Ошибка статуса отработала неправильно");
         assertEquals("Internal server error", result.get("message"), "Ошибка отработала неправильно");
     }
 }
