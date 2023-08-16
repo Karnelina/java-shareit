@@ -195,7 +195,7 @@ public class ItemServiceImpl implements ItemService {
         LocalDateTime currentTime = LocalDateTime.now();
         return bookings.stream()
                 .sorted(orderByStartDateAsc)
-                .filter(t -> t.getStart().isAfter(currentTime) &&
+                .filter((Booking t) -> t.getStart().isAfter(currentTime) &&
                         t.getStatus().equals(Status.APPROVED))
                 .findFirst();
     }
@@ -204,7 +204,7 @@ public class ItemServiceImpl implements ItemService {
         LocalDateTime currentTime = LocalDateTime.now();
         return bookings.stream()
                 .sorted(orderByStartDateDesc)
-                .filter(t -> t.getStart().isBefore(currentTime) &&
+                .filter((Booking t) -> t.getStart().isBefore(currentTime) &&
                         t.getStatus().equals(Status.APPROVED))
                 .findFirst();
     }

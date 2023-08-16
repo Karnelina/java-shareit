@@ -17,7 +17,7 @@ class CommentRequestDtoTests {
     private JacksonTester<CommentRequestDto> commentRequestDtoJacksonTester;
 
     @Test
-    void commentRequestDtoTest() throws IOException {
+    void testCommentRequestDto() throws IOException {
         CommentRequestDto commentRequestDto = new CommentRequestDto("text");
 
         JsonContent<CommentRequestDto> jsonContent = commentRequestDtoJacksonTester.write(commentRequestDto);

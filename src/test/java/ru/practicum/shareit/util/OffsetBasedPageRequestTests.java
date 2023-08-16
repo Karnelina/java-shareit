@@ -17,9 +17,9 @@ class OffsetBasedPageRequestTests {
         Sort sort = Sort.by(Sort.Direction.ASC, "id");
         OffsetBasedPageRequest pageRequest = new OffsetBasedPageRequest(offset, limit, sort);
 
-        assertEquals(offset, pageRequest.getOffset());
-        assertEquals(limit, pageRequest.getPageSize());
-        assertEquals(sort, pageRequest.getSort());
+        assertEquals(offset, pageRequest.getOffset(), "Неправильный результат сравнения");
+        assertEquals(limit, pageRequest.getPageSize(), "Неправильный результат сравнения");
+        assertEquals(sort, pageRequest.getSort(), "Неправильный результат сравнения");
     }
 
     @Test
@@ -28,7 +28,8 @@ class OffsetBasedPageRequestTests {
         int limit = 20;
         Sort sort = Sort.by(Sort.Direction.ASC, "id");
 
-        assertThrows(IllegalArgumentException.class, () -> new OffsetBasedPageRequest(offset, limit, sort));
+        assertThrows(IllegalArgumentException.class, () -> new OffsetBasedPageRequest(offset, limit, sort)
+                , "Ошибка отработала неправильно");
     }
 
     @Test
@@ -37,7 +38,8 @@ class OffsetBasedPageRequestTests {
         int limit = 0;
         Sort sort = Sort.by(Sort.Direction.ASC, "id");
 
-        assertThrows(IllegalArgumentException.class, () -> new OffsetBasedPageRequest(offset, limit, sort));
+        assertThrows(IllegalArgumentException.class, () -> new OffsetBasedPageRequest(offset, limit, sort)
+                , "Ошибка отработала неправильно");
     }
 
     @Test
@@ -46,11 +48,11 @@ class OffsetBasedPageRequestTests {
         int limit = 15;
         OffsetBasedPageRequest pageRequest = new OffsetBasedPageRequest(offset, limit, Sort.Direction.DESC, "name");
 
-        assertEquals(offset, pageRequest.getOffset());
-        assertEquals(limit, pageRequest.getPageSize());
-        assertTrue(pageRequest.getSort().isSorted());
+        assertEquals(offset, pageRequest.getOffset(), "Неправильный результат сравнения");
+        assertEquals(limit, pageRequest.getPageSize(), "Неправильный результат сравнения");
+        assertTrue(pageRequest.getSort().isSorted(), "Неправильный результат сравнения");
         assertEquals(Sort.Direction.DESC, Objects.requireNonNull(pageRequest.getSort()
-                .getOrderFor("name")).getDirection());
+                .getOrderFor("name")).getDirection(), "Неправильный результат сравнения");
     }
 
     @Test
@@ -59,9 +61,9 @@ class OffsetBasedPageRequestTests {
         int limit = 25;
         OffsetBasedPageRequest pageRequest = new OffsetBasedPageRequest(offset, limit);
 
-        assertEquals(offset, pageRequest.getOffset());
-        assertEquals(limit, pageRequest.getPageSize());
-        assertFalse(pageRequest.getSort().isSorted());
+        assertEquals(offset, pageRequest.getOffset(), "Неправильный результат сравнения");
+        assertEquals(limit, pageRequest.getPageSize(), "Неправильный результат сравнения");
+        assertFalse(pageRequest.getSort().isSorted(), "Неправильный результат сравнения");
     }
 
     @Test
@@ -70,7 +72,7 @@ class OffsetBasedPageRequestTests {
         int limit = 10;
         OffsetBasedPageRequest pageRequest = new OffsetBasedPageRequest(offset, limit);
 
-        assertEquals(2, pageRequest.getPageNumber());
+        assertEquals(2, pageRequest.getPageNumber(), "Неправильный результат сравнения");
     }
 
     @Test
@@ -80,8 +82,8 @@ class OffsetBasedPageRequestTests {
         OffsetBasedPageRequest pageRequest = new OffsetBasedPageRequest(offset, limit);
 
         Pageable next = pageRequest.next();
-        assertEquals(offset + limit, next.getOffset());
-        assertEquals(limit, next.getPageSize());
+        assertEquals(offset + limit, next.getOffset(), "Неправильный результат сравнения");
+        assertEquals(limit, next.getPageSize(), "Неправильный результат сравнения");
     }
 
     @Test
@@ -91,8 +93,8 @@ class OffsetBasedPageRequestTests {
         OffsetBasedPageRequest pageRequest = new OffsetBasedPageRequest(offset, limit);
 
         Pageable previous = pageRequest.previous();
-        assertEquals(offset - limit, previous.getOffset());
-        assertEquals(limit, previous.getPageSize());
+        assertEquals(offset - limit, previous.getOffset(), "Неправильный результат сравнения");
+        assertEquals(limit, previous.getPageSize(), "Неправильный результат сравнения");
     }
 
     @Test
@@ -102,13 +104,13 @@ class OffsetBasedPageRequestTests {
         OffsetBasedPageRequest pageRequest = new OffsetBasedPageRequest(offset, limit);
 
         Pageable previousOrFirst = pageRequest.previousOrFirst();
-        assertEquals(offset - limit, previousOrFirst.getOffset());
-        assertEquals(limit, previousOrFirst.getPageSize());
+        assertEquals(offset - limit, previousOrFirst.getOffset(), "Неправильный результат сравнения");
+        assertEquals(limit, previousOrFirst.getPageSize(), "Неправильный результат сравнения");
 
         pageRequest = new OffsetBasedPageRequest(offset - limit, limit);
         previousOrFirst = pageRequest.previousOrFirst();
-        assertEquals(0, previousOrFirst.getOffset());
-        assertEquals(limit, previousOrFirst.getPageSize());
+        assertEquals(0, previousOrFirst.getOffset(), "Неправильный результат сравнения");
+        assertEquals(limit, previousOrFirst.getPageSize(), "Неправильный результат сравнения");
     }
 
     @Test
@@ -118,8 +120,8 @@ class OffsetBasedPageRequestTests {
         OffsetBasedPageRequest pageRequest = new OffsetBasedPageRequest(offset, limit);
 
         Pageable first = pageRequest.first();
-        assertEquals(0, first.getOffset());
-        assertEquals(limit, first.getPageSize());
+        assertEquals(0, first.getOffset(), "Неправильный результат сравнения");
+        assertEquals(limit, first.getPageSize(), "Неправильный результат сравнения");
     }
 
     @Test
@@ -128,10 +130,10 @@ class OffsetBasedPageRequestTests {
         int limit = 5;
         OffsetBasedPageRequest pageRequest = new OffsetBasedPageRequest(offset, limit);
 
-        assertTrue(pageRequest.hasPrevious());
+        assertTrue(pageRequest.hasPrevious(), "Неправильный результат сравнения");
 
         pageRequest = new OffsetBasedPageRequest(offset - limit, limit);
-        assertFalse(pageRequest.hasPrevious());
+        assertFalse(pageRequest.hasPrevious(), "Неправильный результат сравнения");
     }
 
     @Test
@@ -146,12 +148,12 @@ class OffsetBasedPageRequestTests {
         Sort sort2 = Sort.by(Sort.Direction.ASC, "id");
         OffsetBasedPageRequest pageRequest2 = new OffsetBasedPageRequest(offset2, limit2, sort2);
 
-        assertEquals(pageRequest1, pageRequest2);
-        assertEquals(pageRequest1.hashCode(), pageRequest2.hashCode());
+        assertEquals(pageRequest1, pageRequest2, "Неправильный результат сравнения");
+        assertEquals(pageRequest1.hashCode(), pageRequest2.hashCode(), "Неправильный результат сравнения");
 
         pageRequest2 = new OffsetBasedPageRequest(offset2, 3, sort2);
 
-        assertNotEquals(pageRequest1, pageRequest2);
-        assertNotEquals(pageRequest1.hashCode(), pageRequest2.hashCode());
+        assertNotEquals(pageRequest1, pageRequest2, "Неправильный результат сравнения");
+        assertNotEquals(pageRequest1.hashCode(), pageRequest2.hashCode(), "Неправильный результат сравнения");
     }
 }

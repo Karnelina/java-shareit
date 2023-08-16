@@ -18,7 +18,7 @@ class CommentResponseDtoTests {
     private JacksonTester<CommentResponseDto> commentResponseDtoJacksonTester;
 
     @Test
-    void commentResponseDtoTest() throws IOException {
+    void testCommentResponseDto() throws IOException {
         LocalDateTime time = LocalDateTime.of(2023, 1, 1, 12, 0);
 
         CommentResponseDto commentResponseDto = CommentResponseDto.builder()

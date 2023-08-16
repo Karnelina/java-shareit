@@ -20,13 +20,13 @@ class ValuesAllowedConstraintValidatorTests {
     private ValuesAllowedConstraintValidator validator;
 
     @Test
-    void shouldReturnTrueForNullValue() {
+    void testShouldReturnTrueForNullValue() {
         validator.initialize(createAnnotation("value1", "value2"));
         assertTrue(validator.isValid(null, context));
     }
 
     @Test
-    void shouldReturnTrueForValidValue() {
+    void testShouldReturnTrueForValidValue() {
         validator.initialize(createAnnotation("value1", "value2"));
         assertTrue(validator.isValid("value1", context));
     }

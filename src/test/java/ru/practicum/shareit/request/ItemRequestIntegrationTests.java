@@ -58,7 +58,7 @@ class ItemRequestIntegrationTests {
 
     @Test
     @DirtiesContext
-    void shouldSaveItemRequest() {
+    void testShouldSaveItemRequest() {
         userService.save(user);
         ItemRequest itemRequestToSave = itemRequestService.saveItemRequest("description", 1L);
 
@@ -67,24 +67,24 @@ class ItemRequestIntegrationTests {
 
         ItemRequest itemRequestFromBd = query.setParameter("id", 1L).getSingleResult();
 
-        assertThat(itemRequestFromBd.getDescription(), equalTo(itemRequestToSave.getDescription()));
+        assertThat("Неправильный результат описания", itemRequestFromBd.getDescription(), equalTo(itemRequestToSave.getDescription()));
     }
 
     @Test
     @DirtiesContext
-    void shouldFindOwnItemRequests() {
+    void testShouldFindOwnItemRequests() {
         userService.save(user);
         itemRequestService.saveItemRequest("description", 1L);
 
         List<ItemRequestResponseDto> itemRequests =
                 (List<ItemRequestResponseDto>) itemRequestService.findOwnItemRequests(1L);
 
-        assertThat(itemRequests.size(), equalTo(1));
+        assertThat("Неправильный результат размера", itemRequests.size(), equalTo(1));
     }
 
     @Test
     @DirtiesContext
-    void shouldFindItemRequestById() {
+    void testShouldFindItemRequestById() {
         userService.save(user);
         itemRequestService.saveItemRequest("description", 1L);
 
@@ -93,13 +93,13 @@ class ItemRequestIntegrationTests {
 
         ItemRequestResponseDto itemRequestResponseDto = itemRequestService.findItemRequestsById(1L, 1L);
 
-        assertThat(itemRequestResponseDto.getDescription(), equalTo("description"));
-        assertThat(itemRequestResponseDto.getId(), equalTo(1L));
+        assertThat("Неправильный результат описания", itemRequestResponseDto.getDescription(), equalTo("description"));
+        assertThat("Неправильный результат id", itemRequestResponseDto.getId(), equalTo(1L));
     }
 
     @Test
     @DirtiesContext
-    void shouldFindAllItemRequests() {
+    void testShouldFindAllItemRequests() {
         User secondUser = User.builder()
                 .name("second")
                 .email("email1@email.ru")
@@ -117,7 +117,7 @@ class ItemRequestIntegrationTests {
         List<ItemRequestResponseDto> itemRequests =
                 (List<ItemRequestResponseDto>) itemRequestService.findAllItemRequests(2L, page);
 
-        assertThat(itemRequests.size(), equalTo(1));
+        assertThat("Неправильный результат размера", itemRequests.size(), equalTo(1));
     }
 
 }

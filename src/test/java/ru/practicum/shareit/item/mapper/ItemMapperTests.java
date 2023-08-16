@@ -10,7 +10,7 @@ import static org.hamcrest.Matchers.equalTo;
 
 class ItemMapperTests {
     @Test
-    void mapToItemDtoTest() {
+    void testMapToItemDto() {
         Item item = Item.builder()
                 .id(1L)
                 .name("name")
@@ -21,10 +21,10 @@ class ItemMapperTests {
 
         ItemDto itemDto = ItemMapper.mapToItemDto(item);
 
-        assertThat(item.getId(), equalTo(itemDto.getId()));
-        assertThat(item.getName(), equalTo(itemDto.getName()));
-        assertThat(item.getDescription(), equalTo(itemDto.getDescription()));
-        assertThat(item.getAvailable(), equalTo(itemDto.getAvailable()));
-        assertThat(item.getItemRequest().getId(), equalTo(itemDto.getRequestId()));
+        assertThat("Неправильный результат id", item.getId(), equalTo(itemDto.getId()));
+        assertThat("Неправильный результат название", item.getName(), equalTo(itemDto.getName()));
+        assertThat("Неправильный результат описание", item.getDescription(), equalTo(itemDto.getDescription()));
+        assertThat("Неправильный результат доступа", item.getAvailable(), equalTo(itemDto.getAvailable()));
+        assertThat("Неправильный результат запроса", item.getItemRequest().getId(), equalTo(itemDto.getRequestId()));
     }
 }

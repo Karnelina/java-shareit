@@ -94,9 +94,9 @@ class BookingIntegrationTests {
         user.setId(1L);
         item.setId(1L);
         Booking bookingFromDb = query.setParameter("id", 1L).getSingleResult();
-        assertThat(bookingFromDb.getStart(), equalTo(start));
-        assertThat(bookingFromDb.getEnd(), equalTo(end));
-        assertThat(bookingFromDb.getStatus(), equalTo(WAITING));
+        assertThat("Неправильный результат старта", bookingFromDb.getStart(), equalTo(start));
+        assertThat("Неправильный результат конца", bookingFromDb.getEnd(), equalTo(end));
+        assertThat("Неправильный результат статуса", bookingFromDb.getStatus(), equalTo(WAITING));
     }
 
     @Test
@@ -115,7 +115,7 @@ class BookingIntegrationTests {
 
         Collection<Booking> bookings = bookingService.findByUserId(2L, "all", page);
 
-        assertThat(bookings.size(), equalTo(1));
+        assertThat("Неправильный результат количество", bookings.size(), equalTo(1));
     }
 
     @Test
@@ -138,7 +138,7 @@ class BookingIntegrationTests {
                 .createQuery("select b from Booking b where b.id = :id", Booking.class);
 
         Booking bookingFromDb = query.setParameter("id", 1L).getSingleResult();
-        assertThat(bookingFromDb.getStatus(), equalTo(APPROVED));
+        assertThat("Неправильный результат статуса", bookingFromDb.getStatus(), equalTo(APPROVED));
     }
 
     @Test
@@ -158,7 +158,7 @@ class BookingIntegrationTests {
         Booking newBooking = bookingService.findAllBookingsByUserId(1L, 1L);
 
         secondUser.setId(1L);
-        assertThat(newBooking.getBooker(), equalTo(secondUser));
+        assertThat("Неправильный результат поиска", newBooking.getBooker(), equalTo(secondUser));
     }
 
     @Test
@@ -177,7 +177,7 @@ class BookingIntegrationTests {
 
         Collection<Booking> bookings = bookingService.findOwnerBookings(1L, "waiting", page);
 
-        assertThat(bookings.size(), equalTo(1));
+        assertThat("Неправильный результат количество", bookings.size(), equalTo(1));
     }
 
 }

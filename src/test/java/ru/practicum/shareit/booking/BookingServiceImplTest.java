@@ -86,28 +86,29 @@ class BookingServiceImplTest {
     }
 
     @Test
-    void shouldThrowExceptionWhenUserNotFoundBookingSave() {
+    void testShouldThrowExceptionWhenUserNotFoundBookingSave() {
         when(mockItemRepository.findById(anyLong()))
                 .thenReturn(Optional.empty());
 
         assertThrows(NotFoundException.class, () ->
-                bookingService.save(1L, start, end, 1L));
+                bookingService.save(1L, start, end, 1L), "Ошибка отработала неправильно");
         verify(mockItemRepository, times(1)).findById(anyLong());
     }
 
     @Test
-    void shouldThrowExceptionIfOwnerIdEqualsBookerIdInSave() {
+    void testShouldThrowExceptionIfOwnerIdEqualsBookerIdInSave() {
         when(mockItemRepository.findById(anyLong()))
                 .thenReturn(Optional.ofNullable(item));
 
         long itemId = item.getId();
         long userId = user.getId();
-        assertThrows(NotFoundException.class, () -> bookingService.save(itemId, start, end, userId));
+        assertThrows(NotFoundException.class, () -> bookingService.save(itemId, start, end, userId)
+                , "Ошибка отработала неправильно");
         verify(mockItemRepository, times(1)).findById(anyLong());
     }
 
     @Test
-    void shouldThrowExceptionWhenItemNotAvailableInSave() {
+    void testShouldThrowExceptionWhenItemNotAvailableInSave() {
         when(mockItemRepository.findById(anyLong()))
                 .thenReturn(Optional.ofNullable(item));
 
@@ -115,12 +116,13 @@ class BookingServiceImplTest {
         item.setAvailable(false);
         long itemId = item.getId();
         long userId = 99L;
-        assertThrows(ValidationException.class, () -> bookingService.save(itemId, start, end, userId));
+        assertThrows(ValidationException.class, () -> bookingService.save(itemId, start, end, userId)
+                , "Ошибка отработала неправильно");
         verify(mockItemRepository, times(1)).findById(anyLong());
     }
 
     @Test
-    void shouldThrowExceptionWhenBookingTimeDontValidInSave() {
+    void testShouldThrowExceptionWhenBookingTimeDontValidInSave() {
         when(mockItemRepository.findById(anyLong()))
                 .thenReturn(Optional.ofNullable(item));
 
@@ -130,17 +132,21 @@ class BookingServiceImplTest {
         LocalDateTime max = LocalDateTime.MAX;
         LocalDateTime now = LocalDateTime.now();
 
-        assertThrows(ValidationException.class, () -> bookingService.save(itemId, start, min, userId));
-        assertThrows(ValidationException.class, () -> bookingService.save(itemId, start, start, userId));
+        assertThrows(ValidationException.class, () -> bookingService.save(itemId, start, min, userId)
+                , "Ошибка отработала неправильно");
+        assertThrows(ValidationException.class, () -> bookingService.save(itemId, start, start, userId)
+                , "Ошибка отработала неправильно");
         assertThrows(ValidationException.class, () ->
-                bookingService.save(itemId, max, now, userId));
+                bookingService.save(itemId, max, now, userId)
+                , "Ошибка отработала неправильно");
         assertThrows(ValidationException.class, () ->
-                bookingService.save(itemId, max, min, userId));
+                bookingService.save(itemId, max, min, userId)
+                , "Ошибка отработала неправильно");
         verify(mockItemRepository, times(4)).findById(anyLong());
     }
 
     @Test
-    void shouldThrowExceptionWhenBookerNotFoundInSave() {
+    void testShouldThrowExceptionWhenBookerNotFoundInSave() {
         when(mockItemRepository.findById(anyLong()))
                 .thenReturn(Optional.ofNullable(item));
 
@@ -153,13 +159,13 @@ class BookingServiceImplTest {
         LocalDateTime max = LocalDateTime.MAX;
 
         assertThrows(NotFoundException.class, () ->
-                bookingService.save(itemId, now, max, userId));
+                bookingService.save(itemId, now, max, userId), "Ошибка отработала неправильно");
         verify(mockItemRepository, times(1)).findById(anyLong());
         verify(mockUserRepository, times(1)).findById(anyLong());
     }
 
     @Test
-    void shouldSaveBooking() {
+    void testShouldSaveBooking() {
         when(mockItemRepository.findById(anyLong()))
                 .thenReturn(Optional.ofNullable(item));
 
@@ -172,24 +178,25 @@ class BookingServiceImplTest {
         long itemId = item.getId();
         long userId = 99L;
 
-        assertThat(booking, equalTo(bookingService.save(itemId, start, LocalDateTime.MAX, userId)));
+        assertThat("Неправильный результат", booking, equalTo(bookingService.save(itemId, start, LocalDateTime.MAX, userId)));
         verify(mockItemRepository, times(1)).findById(anyLong());
         verify(mockUserRepository, times(1)).findById(anyLong());
         verify(mockBookingRepository, times(1)).save(any());
     }
 
     @Test
-    void shouldThrowExceptionWhenUserNotFoundInFindUserById() {
+    void testShouldThrowExceptionWhenUserNotFoundInFindUserById() {
         when(mockUserRepository.findById(anyLong()))
                 .thenReturn(Optional.empty());
 
         long userId = 99L;
-        assertThrows(NotFoundException.class, () -> bookingService.findByUserId(userId, "ALL", page));
+        assertThrows(NotFoundException.class, () -> bookingService.findByUserId(userId, "ALL", page)
+                , "Ошибка отработала неправильно");
         verify(mockUserRepository, times(1)).findById(anyLong());
     }
 
     @Test
-    void shouldUpdateBookingStatusToApproved() {
+    void testShouldUpdateBookingStatusToApproved() {
         long bookingId = 1L;
         long userId = 3L;
         user.setId(2L);
@@ -220,8 +227,8 @@ class BookingServiceImplTest {
         existingBooking.getItem().setOwner(owner);
         Booking result = bookingService.updateAvailableStatus(bookingId, true, userId);
 
-        assertThat(result, equalTo(booking));
-        assertThat(result.getStatus(), equalTo(Status.APPROVED));
+        assertThat("Неправильный результат", result, equalTo(booking));
+        assertThat("Неправильный результат", result.getStatus(), equalTo(Status.APPROVED));
 
         verify(mockBookingRepository, times(1)).findById(bookingId);
         verify(mockUserRepository, times(1)).findById(userId);
@@ -229,7 +236,7 @@ class BookingServiceImplTest {
     }
 
     @Test
-    void shouldUpdateBookingStatusToRejected() {
+    void testShouldUpdateBookingStatusToRejected() {
         long bookingId = 1L;
         long userId = 3L;
         user.setId(2L);
@@ -261,8 +268,8 @@ class BookingServiceImplTest {
         existingBooking.getItem().setOwner(owner);
         Booking result = bookingService.updateAvailableStatus(bookingId, false, userId);
 
-        assertThat(result, equalTo(booking));
-        assertThat(result.getStatus(), equalTo(Status.REJECTED));
+        assertThat("Неправильный результат", result, equalTo(booking));
+        assertThat("Неправильный результат", result.getStatus(), equalTo(Status.REJECTED));
 
         verify(mockBookingRepository, times(1)).findById(bookingId);
         verify(mockUserRepository, times(1)).findById(userId);
@@ -270,7 +277,7 @@ class BookingServiceImplTest {
     }
 
     @Test
-    void shouldThrowExceptionWhenBookingNotFoundInUpdateAvailableStatus() {
+    void testShouldThrowExceptionWhenBookingNotFoundInUpdateAvailableStatus() {
         long bookingId = 1L;
         long userId = 99L;
 
@@ -278,7 +285,8 @@ class BookingServiceImplTest {
                 .thenReturn(Optional.empty());
 
         assertThrows(NotFoundException.class, () ->
-                bookingService.updateAvailableStatus(bookingId, true, userId));
+                bookingService.updateAvailableStatus(bookingId, true, userId)
+                , "Ошибка отработала неправильно");
 
         verify(mockBookingRepository, times(1)).findById(bookingId);
         verify(mockUserRepository, never()).findById(anyLong());
@@ -286,7 +294,7 @@ class BookingServiceImplTest {
     }
 
     @Test
-    void shouldThrowExceptionWhenUserNotFoundInUpdateAvailableStatus() {
+    void testShouldThrowExceptionWhenUserNotFoundInUpdateAvailableStatus() {
         long bookingId = 1L;
         long userId = 99L;
 
@@ -306,7 +314,8 @@ class BookingServiceImplTest {
                 .thenReturn(Optional.empty());
 
         assertThrows(NotFoundException.class, () ->
-                bookingService.updateAvailableStatus(bookingId, true, userId));
+                bookingService.updateAvailableStatus(bookingId, true, userId)
+                , "Ошибка отработала неправильно");
 
         verify(mockBookingRepository, times(1)).findById(bookingId);
         verify(mockUserRepository, times(1)).findById(userId);
@@ -314,7 +323,7 @@ class BookingServiceImplTest {
     }
 
     @Test
-    void shouldThrowExceptionWhenBookingIsNotWaitingInUpdateAvailableStatus() {
+    void testShouldThrowExceptionWhenBookingIsNotWaitingInUpdateAvailableStatus() {
         long bookingId = 1L;
         long userId = 99L;
 
@@ -334,7 +343,8 @@ class BookingServiceImplTest {
                 .thenReturn(Optional.of(user));
 
         assertThrows(ValidationException.class, () ->
-                bookingService.updateAvailableStatus(bookingId, true, userId));
+                bookingService.updateAvailableStatus(bookingId, true, userId)
+                , "Ошибка отработала неправильно");
 
         verify(mockBookingRepository, times(1)).findById(bookingId);
         verify(mockUserRepository, times(1)).findById(userId);
@@ -342,7 +352,7 @@ class BookingServiceImplTest {
     }
 
     @Test
-    void shouldFindAllBookingsByUserIdWithAllState() {
+    void testShouldFindAllBookingsByUserIdWithAllState() {
         long userId = 1L;
         String stateString = "ALL";
         List<Booking> expectedBookings = Arrays.asList(
@@ -358,14 +368,14 @@ class BookingServiceImplTest {
 
         Collection<Booking> result = bookingService.findByUserId(userId, stateString, page);
 
-        assertThat(result, equalTo(expectedBookings));
+        assertThat("Неправильный результат", result, equalTo(expectedBookings));
 
         verify(mockUserRepository, times(1)).findById(userId);
         verify(mockBookingRepository, times(1)).findByBooker(user, page);
     }
 
     @Test
-    void shouldFindAllBookingsByUserIdWithCurrentState() {
+    void testShouldFindAllBookingsByUserIdWithCurrentState() {
         long userId = 1L;
         String stateString = "CURRENT";
         List<Booking> expectedBookings = Collections.singletonList(
@@ -380,14 +390,14 @@ class BookingServiceImplTest {
 
         Collection<Booking> result = bookingService.findByUserId(userId, stateString, page);
 
-        assertThat(result, equalTo(expectedBookings));
+        assertThat("Неправильный результат", result, equalTo(expectedBookings));
 
         verify(mockUserRepository, times(1)).findById(userId);
         verify(mockBookingRepository, times(1)).findByBookerCurrent(any(), any(), any());
     }
 
     @Test
-    void shouldFindAllBookingsByUserIdWithPastState() {
+    void testShouldFindAllBookingsByUserIdWithPastState() {
         long userId = 1L;
         String stateString = "PAST";
         List<Booking> expectedBookings = Collections.singletonList(
@@ -402,14 +412,14 @@ class BookingServiceImplTest {
 
         Collection<Booking> result = bookingService.findByUserId(userId, stateString, page);
 
-        assertThat(result, equalTo(expectedBookings));
+        assertThat("Неправильный результат", result, equalTo(expectedBookings));
 
         verify(mockUserRepository, times(1)).findById(userId);
         verify(mockBookingRepository, times(1)).findByBookerPast(any(), any(), any());
     }
 
     @Test
-    void shouldFindAllBookingsByUserIdWithFutureState() {
+    void testShouldFindAllBookingsByUserIdWithFutureState() {
         long userId = 1L;
         String stateString = "FUTURE";
         List<Booking> expectedBookings = Collections.singletonList(
@@ -424,14 +434,14 @@ class BookingServiceImplTest {
 
         Collection<Booking> result = bookingService.findByUserId(userId, stateString, page);
 
-        assertThat(result, equalTo(expectedBookings));
+        assertThat("Неправильный результат", result, equalTo(expectedBookings));
 
         verify(mockUserRepository, times(1)).findById(userId);
         verify(mockBookingRepository, times(1)).findByBookerFuture(any(), any(), any());
     }
 
     @Test
-    void shouldFindAllBookingsByUserIdWithWaitingState() {
+    void testShouldFindAllBookingsByUserIdWithWaitingState() {
         long userId = 1L;
         String stateString = "WAITING";
         List<Booking> expectedBookings = Collections.singletonList(
@@ -446,14 +456,14 @@ class BookingServiceImplTest {
 
         Collection<Booking> result = bookingService.findByUserId(userId, stateString, page);
 
-        assertThat(result, equalTo(expectedBookings));
+        assertThat("Неправильный результат", result, equalTo(expectedBookings));
 
         verify(mockUserRepository, times(1)).findById(userId);
         verify(mockBookingRepository, times(1)).findByBookerAndStatus(user, Status.WAITING, page);
     }
 
     @Test
-    void shouldFindAllBookingsByUserIdWithRejectedState() {
+    void testShouldFindAllBookingsByUserIdWithRejectedState() {
         long userId = 1L;
         String stateString = "REJECTED";
         List<Booking> expectedBookings = Collections.singletonList(
@@ -468,14 +478,14 @@ class BookingServiceImplTest {
 
         Collection<Booking> result = bookingService.findByUserId(userId, stateString, page);
 
-        assertThat(result, equalTo(expectedBookings));
+        assertThat("Неправильный результат", result, equalTo(expectedBookings));
 
         verify(mockUserRepository, times(1)).findById(userId);
         verify(mockBookingRepository, times(1)).findByBookerAndStatus(user, Status.REJECTED, page);
     }
 
     @Test
-    void shouldThrowExceptionWhenUserNotFoundInFindAllBookingsByUserId() {
+    void testShouldThrowExceptionWhenUserNotFoundInFindAllBookingsByUserId() {
         long userId = 99L;
         String stateString = "ALL";
 
@@ -483,14 +493,15 @@ class BookingServiceImplTest {
                 .thenReturn(Optional.empty());
 
         assertThrows(NotFoundException.class, () ->
-                bookingService.findByUserId(userId, stateString, page));
+                bookingService.findByUserId(userId, stateString, page)
+                , "Ошибка отработала неправильно");
 
         verify(mockUserRepository, times(1)).findById(userId);
         verify(mockBookingRepository, never()).findByBooker(any(User.class), any(Pageable.class));
     }
 
     @Test
-    void shouldFindAllBookingsByOwnerWithAllState() {
+    void testShouldFindAllBookingsByOwnerWithAllState() {
         long userId = 1L;
         String stateString = "ALL";
         List<Booking> expectedBookings = Arrays.asList(
@@ -506,14 +517,14 @@ class BookingServiceImplTest {
 
         Collection<Booking> result = bookingService.findOwnerBookings(userId, stateString, page);
 
-        assertThat(result, equalTo(expectedBookings));
+        assertThat("Неправильный результат", result, equalTo(expectedBookings));
 
         verify(mockUserRepository, times(1)).findById(userId);
         verify(mockBookingRepository, times(1)).findByItemOwner(user, page);
     }
 
     @Test
-    void shouldFindAllBookingsByOwnerWithCurrentState() {
+    void testShouldFindAllBookingsByOwnerWithCurrentState() {
         long userId = 1L;
         String stateString = "CURRENT";
         List<Booking> expectedBookings = Collections.singletonList(
@@ -535,7 +546,7 @@ class BookingServiceImplTest {
     }
 
     @Test
-    void shouldFindAllBookingsByOwnerWithPastState() {
+    void testShouldFindAllBookingsByOwnerWithPastState() {
         long userId = 1L;
         String stateString = "PAST";
         List<Booking> expectedBookings = Collections.singletonList(
@@ -550,14 +561,14 @@ class BookingServiceImplTest {
 
         Collection<Booking> result = bookingService.findOwnerBookings(userId, stateString, page);
 
-        assertThat(result, equalTo(expectedBookings));
+        assertThat("Неправильный результат", result, equalTo(expectedBookings));
 
         verify(mockUserRepository, times(1)).findById(userId);
         verify(mockBookingRepository, times(1)).findByItemOwnerPast(any(), any(), any());
     }
 
     @Test
-    void shouldFindAllBookingsByOwnerWithFutureState() {
+    void testShouldFindAllBookingsByOwnerWithFutureState() {
         long userId = 1L;
         String stateString = "FUTURE";
         List<Booking> expectedBookings = Collections.singletonList(
@@ -572,14 +583,14 @@ class BookingServiceImplTest {
 
         Collection<Booking> result = bookingService.findOwnerBookings(userId, stateString, page);
 
-        assertThat(result, equalTo(expectedBookings));
+        assertThat("Неправильный результат", result, equalTo(expectedBookings));
 
         verify(mockUserRepository, times(1)).findById(userId);
         verify(mockBookingRepository, times(1)).findByItemOwnerFuture(any(), any(), any());
     }
 
     @Test
-    void shouldFindAllBookingsByOwnerWithWaitingState() {
+    void testShouldFindAllBookingsByOwnerWithWaitingState() {
         long userId = 1L;
         String stateString = "WAITING";
         List<Booking> expectedBookings = Collections.singletonList(
@@ -594,14 +605,14 @@ class BookingServiceImplTest {
 
         Collection<Booking> result = bookingService.findOwnerBookings(userId, stateString, page);
 
-        assertThat(result, equalTo(expectedBookings));
+        assertThat("Неправильный результат", result, equalTo(expectedBookings));
 
         verify(mockUserRepository, times(1)).findById(userId);
         verify(mockBookingRepository, times(1)).findByItemOwnerAndStatus(user, Status.WAITING, page);
     }
 
     @Test
-    void shouldFindAllBookingsByOwnerWithRejectedState() {
+    void testShouldFindAllBookingsByOwnerWithRejectedState() {
         long userId = 1L;
         String stateString = "REJECTED";
         List<Booking> expectedBookings = Collections.singletonList(
@@ -616,14 +627,14 @@ class BookingServiceImplTest {
 
         Collection<Booking> result = bookingService.findOwnerBookings(userId, stateString, page);
 
-        assertThat(result, equalTo(expectedBookings));
+        assertThat("Неправильный результат", result, equalTo(expectedBookings));
 
         verify(mockUserRepository, times(1)).findById(userId);
         verify(mockBookingRepository, times(1)).findByItemOwnerAndStatus(user, Status.REJECTED, page);
     }
 
     @Test
-    void shouldThrowExceptionWhenUserNotFoundInFindAllBookingsByOwner() {
+    void testShouldThrowExceptionWhenUserNotFoundInFindAllBookingsByOwner() {
         long userId = 99L;
         String stateString = "ALL";
 
@@ -631,14 +642,14 @@ class BookingServiceImplTest {
                 .thenReturn(Optional.empty());
 
         assertThrows(NotFoundException.class, () ->
-                bookingService.findOwnerBookings(userId, stateString, page));
+                bookingService.findOwnerBookings(userId, stateString, page), "Ошибка отработала неправильно");
 
         verify(mockUserRepository, times(1)).findById(userId);
         verify(mockBookingRepository, never()).findByItemOwner(any(User.class), any(Pageable.class));
     }
 
     @Test
-    void shouldFindBookingByBookingIdAndUserIdWhenUserIsBooker() {
+    void testShouldFindBookingByBookingIdAndUserIdWhenUserIsBooker() {
         long bookingId = 1L;
         long userId = 99L;
 
@@ -657,14 +668,14 @@ class BookingServiceImplTest {
                 .thenReturn(Optional.of(user));
 
         Booking result = bookingService.findAllBookingsByUserId(bookingId, userId);
-        assertThat(result, equalTo(booking));
+        assertThat("Неправильный результат", result, equalTo(booking));
 
         verify(mockBookingRepository, times(1)).findById(bookingId);
         verify(mockUserRepository, times(1)).findById(userId);
     }
 
     @Test
-    void shouldFindBookingByBookingIdAndUserIdWhenUserIsOwner() {
+    void testShouldFindBookingByBookingIdAndUserIdWhenUserIsOwner() {
         long bookingId = 1L;
         long userId = 123L;
 
@@ -683,7 +694,7 @@ class BookingServiceImplTest {
                 .thenReturn(Optional.of(user));
 
         Booking result = bookingService.findAllBookingsByUserId(bookingId, userId);
-        assertThat(result, equalTo(booking));
+        assertThat("Неправильный результат", result, equalTo(booking));
 
         verify(mockBookingRepository, times(1)).findById(bookingId);
         verify(mockUserRepository, times(1)).findById(userId);
@@ -691,7 +702,7 @@ class BookingServiceImplTest {
 
 
     @Test
-    void shouldThrowNotFoundExceptionWhenBookingNotFound() {
+    void testShouldThrowNotFoundExceptionWhenBookingNotFound() {
         long bookingId = 1L;
         long userId = 99L;
 
@@ -699,14 +710,15 @@ class BookingServiceImplTest {
                 .thenReturn(Optional.empty());
 
         assertThrows(NotFoundException.class,
-                () -> bookingService.findAllBookingsByUserId(bookingId, userId));
+                () -> bookingService.findAllBookingsByUserId(bookingId, userId)
+                , "Ошибка отработала неправильно");
 
         verify(mockBookingRepository, times(1)).findById(bookingId);
         verify(mockUserRepository, never()).findById(anyLong());
     }
 
     @Test
-    void shouldThrowNotFoundExceptionWhenUserNotFound() {
+    void testShouldThrowNotFoundExceptionWhenUserNotFound() {
         long bookingId = 1L;
         long userId = 99L;
 
@@ -723,14 +735,15 @@ class BookingServiceImplTest {
                 .thenReturn(Optional.empty());
 
         assertThrows(NotFoundException.class,
-                () -> bookingService.findAllBookingsByUserId(bookingId, userId));
+                () -> bookingService.findAllBookingsByUserId(bookingId, userId)
+                , "Ошибка отработала неправильно");
 
         verify(mockBookingRepository, times(1)).findById(bookingId);
         verify(mockUserRepository, times(1)).findById(userId);
     }
 
     @Test
-    void shouldThrowNotFoundExceptionWhenNoAvailableBookingsForUser() {
+    void testShouldThrowNotFoundExceptionWhenNoAvailableBookingsForUser() {
         when(mockBookingRepository.findById(anyLong()))
                 .thenReturn(Optional.of(booking));
 
@@ -740,7 +753,7 @@ class BookingServiceImplTest {
         long bookingId = booking.getId();
 
         assertThrows(NotFoundException.class, () -> bookingService.updateAvailableStatus(
-                bookingId, true, bookingId));
+                bookingId, true, bookingId), "Ошибка отработала неправильно");
     }
 }
 

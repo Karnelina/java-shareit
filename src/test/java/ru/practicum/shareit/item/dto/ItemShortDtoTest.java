@@ -17,7 +17,7 @@ class ItemShortDtoTest {
     private JacksonTester<ItemShortDto> getBookingItemDtoJacksonTester;
 
     @Test
-    void getBookingItemDtoTest() throws IOException {
+    void testGetBookingItemDto() throws IOException {
         ItemShortDto getBookingItemDto = new ItemShortDto(1L, "name");
 
         JsonContent<ItemShortDto> jsonContent = getBookingItemDtoJacksonTester.write(getBookingItemDto);

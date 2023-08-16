@@ -17,7 +17,7 @@ class UserShortDtoTests {
     private JacksonTester<UserShortDto> getBookingUserDtoJacksonTester;
 
     @Test
-    void getBookingUserDtoTest() throws IOException {
+    void testGetBookingUserDto() throws IOException {
         UserShortDto getBookingUserDto = new UserShortDto(1L);
 
         JsonContent<UserShortDto> jsonContent = getBookingUserDtoJacksonTester.write(getBookingUserDto);

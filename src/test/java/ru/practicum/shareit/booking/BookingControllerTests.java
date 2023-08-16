@@ -90,7 +90,7 @@ class BookingControllerTests {
     }
 
     @Test
-    void shouldSaveBooking() throws Exception {
+    void testShouldSaveBooking() throws Exception {
         when(mockBookingService.save(anyLong(), any(), any(), anyLong()))
                 .thenReturn(booking);
 
@@ -113,7 +113,7 @@ class BookingControllerTests {
     }
 
     @Test
-    void shouldFindAllBookingsByUserId() throws Exception {
+    void testShouldFindAllBookingsByUserId() throws Exception {
         when(mockBookingService.findByUserId(anyLong(), any(), any()))
                 .thenReturn(List.of(booking));
 
@@ -133,7 +133,7 @@ class BookingControllerTests {
     }
 
     @Test
-    void shouldUpdateAvailableStatus() throws Exception {
+    void testShouldUpdateAvailableStatus() throws Exception {
         when(mockBookingService.updateAvailableStatus(anyLong(), any(), anyLong()))
                 .thenReturn(booking);
 
@@ -156,7 +156,7 @@ class BookingControllerTests {
     }
 
     @Test
-    void shouldFindBookingByUserOwner() throws Exception {
+    void testShouldFindBookingByUserOwner() throws Exception {
         when(mockBookingService.findAllBookingsByUserId(anyLong(), anyLong()))
                 .thenReturn(booking);
 
@@ -174,7 +174,7 @@ class BookingControllerTests {
     }
 
     @Test
-    void shouldFindOwnerBookings() throws Exception {
+    void testShouldFindOwnerBookings() throws Exception {
         when(mockBookingService.findOwnerBookings(anyLong(), any(), any()))
                 .thenReturn(List.of(booking));
 
