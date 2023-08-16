@@ -17,7 +17,7 @@ class ItemDtoTests {
     private JacksonTester<ItemDto> itemDtoJacksonTester;
 
     @Test
-    void itemDtoTest() throws IOException {
+    void testItemDto() throws IOException {
         ItemDto itemDto = ItemDto.builder()
                 .id(null)
                 .name("name")

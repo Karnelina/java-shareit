@@ -76,18 +76,18 @@ class ItemIntegrationTests {
 
     @Test
     @DirtiesContext
-    void shouldSaveItem() {
+    void testShouldSaveItem() {
         userService.save(user);
         itemService.save(itemDto, 1L);
 
         TypedQuery<Item> query = entityManager.createQuery("select i from Item i where i.id = :id", Item.class);
         Item item = query.setParameter("id", 1L).getSingleResult();
-        assertThat(item.getId(), notNullValue());
+        assertThat("Неправильный результат id", item.getId(), notNullValue());
     }
 
     @Test
     @DirtiesContext
-    void shouldUpdateItem() {
+    void testShouldUpdateItem() {
         userService.save(user);
         itemService.save(itemDto, 1L);
 
@@ -97,12 +97,12 @@ class ItemIntegrationTests {
         TypedQuery<Item> query = entityManager.createQuery("select i from Item i where i.id = :id", Item.class);
         Item updatedItem = query.setParameter("id", 1L).getSingleResult();
 
-        assertThat(updatedItem.getName(), equalTo("updatedName"));
+        assertThat("Неправильный результат название", updatedItem.getName(), equalTo("updatedName"));
     }
 
     @Test
     @DirtiesContext
-    void shouldSaveComment() {
+    void testShouldSaveComment() {
         userService.save(user);
         userService.save(secondUser);
         itemService.save(itemDto, 1L);
@@ -116,13 +116,13 @@ class ItemIntegrationTests {
 
         Comment comment = query.setParameter("id", 1L).getSingleResult();
         item.setId(1L);
-        assertThat(comment.getId(), notNullValue());
-        assertThat(comment.getText(), equalTo(text));
+        assertThat("Неправильный результат id", comment.getId(), notNullValue());
+        assertThat("Неправильный результат текст", comment.getText(), equalTo(text));
     }
 
     @Test
     @DirtiesContext
-    void shouldFindById() {
+    void testShouldFindById() {
         userService.save(user);
         itemService.save(itemDto, 1L);
         ItemAllFieldsDto itemAllFieldsDto = itemService.findById(1L, 1L);
@@ -131,25 +131,25 @@ class ItemIntegrationTests {
 
         Item itemFromBd = query.setParameter("id", 1L).getSingleResult();
 
-        assertThat(itemAllFieldsDto.getName(), equalTo(itemFromBd.getName()));
-        assertThat(itemAllFieldsDto.getDescription(), equalTo(itemFromBd.getDescription()));
-        assertThat(itemAllFieldsDto.getAvailable(), equalTo(itemFromBd.getAvailable()));
+        assertThat("Неправильный результат название", itemAllFieldsDto.getName(), equalTo(itemFromBd.getName()));
+        assertThat("Неправильный результат описание", itemAllFieldsDto.getDescription(), equalTo(itemFromBd.getDescription()));
+        assertThat("Неправильный результат доступа", itemAllFieldsDto.getAvailable(), equalTo(itemFromBd.getAvailable()));
     }
 
     @Test
     @DirtiesContext
-    void shouldFindItemsByUserId() {
+    void testShouldFindItemsByUserId() {
         userService.save(user);
         itemService.save(itemDto, 1L);
 
         Collection<ItemAllFieldsDto> items = itemService.findItemsByUserId(1L, page);
 
-        assertThat(items.size(), equalTo(1));
+        assertThat("Неправильный результат размер", items.size(), equalTo(1));
     }
 
     @Test
     @DirtiesContext
-    void shouldSearchByText() {
+    void testShouldSearchByText() {
         userService.save(user);
         itemDto.setDescription("toSearch");
         itemService.save(itemDto, 1L);
@@ -157,8 +157,8 @@ class ItemIntegrationTests {
         List<ItemAllFieldsDto> items = (List<ItemAllFieldsDto>)
                 itemService.searchByText("toSearch", 1L, page);
 
-        assertThat(items.size(), equalTo(1));
-        assertThat(items.get(0).getDescription(), equalTo("toSearch"));
+        assertThat("Неправильный результат размер", items.size(), equalTo(1));
+        assertThat("Неправильный результат описание", items.get(0).getDescription(), equalTo("toSearch"));
     }
 }
 

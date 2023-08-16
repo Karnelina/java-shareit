@@ -58,7 +58,7 @@ public class ErrorHandler {
         );
     }
 
-    private Map<String, String> createErrorResponse(HttpStatus status, String message) {
+    private static Map<String, String> createErrorResponse(HttpStatus status, String message) {
         Map<String, String> response = new HashMap<>();
         response.put("status", status.toString());
         response.put("message", message);

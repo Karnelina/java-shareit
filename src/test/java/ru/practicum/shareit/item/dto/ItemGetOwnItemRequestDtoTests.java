@@ -17,7 +17,7 @@ class ItemGetOwnItemRequestDtoTests {
     private JacksonTester<ItemGetOwnItemRequestDto> itemGetOwnItemRequestDtoJacksonTester;
 
     @Test
-    void itemGetOwnItemRequestDtoTest() throws IOException {
+    void testItemGetOwnItemRequestDto() throws IOException {
         ItemGetOwnItemRequestDto itemGetOwnItemRequestDto = ItemGetOwnItemRequestDto.builder()
                 .id(1L)
                 .name("name")

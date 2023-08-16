@@ -95,7 +95,7 @@ public class OffsetBasedPageRequest implements Pageable, Serializable {
     public boolean equals(Object o) {
         if (this == o) return true;
 
-        if (!(o instanceof OffsetBasedPageRequest)) return false;
+        if (!(this.getClass() == o.getClass())) return false;
 
         OffsetBasedPageRequest that = (OffsetBasedPageRequest) o;
 

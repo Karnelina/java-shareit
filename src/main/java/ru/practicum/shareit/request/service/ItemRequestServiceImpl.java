@@ -108,7 +108,7 @@ public class ItemRequestServiceImpl implements ItemRequestService {
                         Item::getItemRequest,
                         Collectors.collectingAndThen(
                                 Collectors.toList(),
-                                list -> list != null ? list : Collections.emptyList()
+                                (List<Item> list) -> list != null ? list : Collections.emptyList()
                         )
                 ));
     }

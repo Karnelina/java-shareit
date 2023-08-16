@@ -61,7 +61,7 @@ class UserControllerTests {
     }
 
     @Test
-    void shouldSaveUser() throws Exception {
+    void testShouldSaveUser() throws Exception {
         when(mockUserService.save(any()))
                 .thenReturn(user);
 
@@ -81,7 +81,7 @@ class UserControllerTests {
     }
 
     @Test
-    void shouldUpdateUser() throws Exception {
+    void testShouldUpdateUser() throws Exception {
         when(mockUserService.update(any(), anyLong()))
                 .thenReturn(user);
 
@@ -101,7 +101,7 @@ class UserControllerTests {
     }
 
     @Test
-    void shouldFindUserById() throws Exception {
+    void testShouldFindUserById() throws Exception {
         when(mockUserService.findById(anyLong()))
                 .thenReturn(user);
 
@@ -116,7 +116,7 @@ class UserControllerTests {
     }
 
     @Test
-    void shouldFindAllUsers() throws Exception {
+    void testShouldFindAllUsers() throws Exception {
         when(mockUserService.findAll())
                 .thenReturn(List.of(user));
 
@@ -130,7 +130,7 @@ class UserControllerTests {
     }
 
     @Test
-    void shouldDeleteUserById() throws Exception {
+    void testShouldDeleteUserById() throws Exception {
         mvc.perform(delete("/users/{userId}", 1))
                 .andExpect(status().isOk());
     }

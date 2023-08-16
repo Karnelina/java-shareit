@@ -18,7 +18,7 @@ class CreateBookingDtoTest {
     private JacksonTester<CreateBookingDto> bookingSavingDtoJacksonTester;
 
     @Test
-    void bookingSavingDtoTest() throws IOException {
+    void testBookingSavingDto() throws IOException {
         LocalDateTime start = LocalDateTime.of(2023, 1, 1, 12, 0);
         LocalDateTime end = LocalDateTime.of(2023, 1, 2, 12, 0);
 

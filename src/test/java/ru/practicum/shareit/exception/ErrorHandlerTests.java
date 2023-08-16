@@ -19,31 +19,33 @@ class ErrorHandlerTests {
     void testHandleNotFound() {
         NotFoundException notFoundException = new NotFoundException("Resource not found");
         Map<String, String> result = errorHandler.handleNotFound(notFoundException);
-        assertEquals(HttpStatus.NOT_FOUND.toString(), result.get("status"));
-        assertEquals("Resource not found", result.get("message"));
+        assertEquals(HttpStatus.NOT_FOUND.toString(), result.get("status"), "Ошибка статуса отработала неправильно");
+        assertEquals("Resource not found", result.get("message"), "Ошибка отработала неправильно");
     }
 
     @Test
     void testHandleConflict() {
         AlreadyExistsException alreadyExistsException = new AlreadyExistsException("Resource already exists");
         Map<String, String> result = errorHandler.handleConflict(alreadyExistsException);
-        assertEquals(HttpStatus.CONFLICT.toString(), result.get("status"));
-        assertEquals("Resource already exists", result.get("message"));
+        assertEquals(HttpStatus.CONFLICT.toString(), result.get("status"), "Ошибка статуса отработала неправильно");
+        assertEquals("Resource already exists", result.get("message"), "Ошибка отработала неправильно");
     }
 
     @Test
     void testHandleBadRequest() {
         ValidationException validationException = new ValidationException("Bad request");
         Map<String, String> result = errorHandler.handleBadRequest(validationException);
-        assertEquals(HttpStatus.BAD_REQUEST.toString(), result.get("status"));
-        assertEquals("Bad request", result.get("message"));
+        assertEquals(HttpStatus.BAD_REQUEST.toString(), result.get("status")
+                , "Ошибка статуса отработала неправильно");
+        assertEquals("Bad request", result.get("message"), "Ошибка отработала неправильно");
     }
 
     @Test
     void testHandleRaw() {
         Throwable throwable = new Throwable("Internal server error");
         Map<String, String> result = errorHandler.handleRaw(throwable);
-        assertEquals(HttpStatus.INTERNAL_SERVER_ERROR.toString(), result.get("status"));
-        assertEquals("Internal server error", result.get("message"));
+        assertEquals(HttpStatus.INTERNAL_SERVER_ERROR.toString(), result.get("status")
+                , "Ошибка статуса отработала неправильно");
+        assertEquals("Internal server error", result.get("message"), "Ошибка отработала неправильно");
     }
 }

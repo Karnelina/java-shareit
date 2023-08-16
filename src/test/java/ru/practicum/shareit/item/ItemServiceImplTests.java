@@ -99,7 +99,7 @@ class ItemServiceImplTests {
     }
 
     @Test
-    void shouldSaveItem() {
+    void testShouldSaveItem() {
         ItemDto itemDto = new ItemDto();
         itemDto.setName("Test Item");
 
@@ -108,30 +108,31 @@ class ItemServiceImplTests {
 
         Item savedItem = itemService.save(itemDto, user.getId());
 
-        assertNotNull(savedItem);
-        assertThat(savedItem.getName(), equalTo(item.getName()));
-        assertThat(savedItem.getOwner(), equalTo(user));
+        assertNotNull(savedItem, "Неправильный результат проверки на NotNull");
+        assertThat("Неправильный результат названия", savedItem.getName(), equalTo(item.getName()));
+        assertThat("Неправильный результат хозяина", savedItem.getOwner(), equalTo(user));
 
         verify(mockUserRepository, times(1)).findById(user.getId());
         verify(mockItemRepository, times(1)).save(any());
     }
 
     @Test
-    void shouldThrowNotFoundExceptionWhenOwnerNotFoundInSave() {
+    void testShouldThrowNotFoundExceptionWhenOwnerNotFoundInSave() {
         ItemDto itemDto = new ItemDto();
         itemDto.setName("Test Item");
 
         when(mockUserRepository.findById(user.getId())).thenReturn(Optional.empty());
 
         Long userId = user.getId();
-        assertThrows(NotFoundException.class, () -> itemService.save(itemDto, userId));
+        assertThrows(NotFoundException.class, () -> itemService.save(itemDto, userId),
+                "Ошибка статуса отработала неправильно");
 
         verify(mockUserRepository, times(1)).findById(user.getId());
         verify(mockItemRepository, never()).save(any());
     }
 
     @Test
-    void shouldSetItemRequestWhenRequestIdProvidedInSave() {
+    void testShouldSetItemRequestWhenRequestIdProvidedInSave() {
         long userId = 1L;
         long itemRequestId = 1L;
         String itemName = "Test Item";
@@ -151,10 +152,10 @@ class ItemServiceImplTests {
 
         Item savedItem = itemService.save(itemDto, userId);
 
-        assertNotNull(savedItem);
-        assertEquals(itemName, savedItem.getName());
-        assertEquals(user, savedItem.getOwner());
-        assertEquals(itemRequest, savedItem.getItemRequest());
+        assertNotNull(savedItem, "Неправильный результат проверки на NotNull");
+        assertEquals(itemName, savedItem.getName(), "Неправильный результат сравнения");
+        assertEquals(user, savedItem.getOwner(), "Неправильный результат сравнения");
+        assertEquals(itemRequest, savedItem.getItemRequest(), "Неправильный результат сравнения");
 
         verify(mockUserRepository, times(1)).findById(userId);
         verify(mockItemRequestRepository, times(1)).findById(itemRequestId);
@@ -163,7 +164,7 @@ class ItemServiceImplTests {
 
 
     @Test
-    void shouldUpdateItemInUpdate() {
+    void testShouldUpdateItemInUpdate() {
         Item updatedItem = new Item();
         updatedItem.setId(item.getId());
         updatedItem.setName("Updated Item");
@@ -173,15 +174,15 @@ class ItemServiceImplTests {
 
         Item result = itemService.update(updatedItem, item.getId(), user.getId());
 
-        assertNotNull(result);
-        assertThat(result.getName(), equalTo(updatedItem.getName()));
+        assertNotNull(result, "Неправильный результат проверки на NotNull");
+        assertThat("Неправильный результат", result.getName(), equalTo(updatedItem.getName()));
 
         verify(mockItemRepository, times(1)).findById(item.getId());
         verify(mockItemRepository, times(1)).save(any());
     }
 
     @Test
-    void shouldThrowNotFoundExceptionWhenItemNotFoundInUpdate() {
+    void testShouldThrowNotFoundExceptionWhenItemNotFoundInUpdate() {
         Item updatedItem = new Item();
         updatedItem.setId(item.getId());
         updatedItem.setName("Updated Item");
@@ -190,14 +191,15 @@ class ItemServiceImplTests {
 
         long itemId = item.getId();
         long userId = user.getId();
-        assertThrows(NotFoundException.class, () -> itemService.update(updatedItem, itemId, userId));
+        assertThrows(NotFoundException.class, () -> itemService.update(updatedItem, itemId, userId),
+                "Ошибка отработала неправильно");
 
         verify(mockItemRepository, times(1)).findById(item.getId());
         verify(mockItemRepository, never()).save(any());
     }
 
     @Test
-    void shouldThrowNotFoundExceptionWhenUserNotOwnerInUpdate() {
+    void testShouldThrowNotFoundExceptionWhenUserNotOwnerInUpdate() {
         Item updatedItem = new Item();
         updatedItem.setId(item.getId());
         updatedItem.setName("Updated Item");
@@ -209,38 +211,40 @@ class ItemServiceImplTests {
 
         long itemId = item.getId();
         long userId = differentUser.getId();
-        assertThrows(NotFoundException.class, () -> itemService.update(updatedItem, itemId, userId));
+        assertThrows(NotFoundException.class, () -> itemService.update(updatedItem, itemId, userId),
+                "Ошибка отработала неправильно");
 
         verify(mockItemRepository, times(1)).findById(item.getId());
         verify(mockItemRepository, never()).save(any());
     }
 
     @Test
-    void shouldReturnItemDtoInFindById() {
+    void testShouldReturnItemDtoInFindById() {
         when(mockItemRepository.findById(item.getId())).thenReturn(Optional.of(item));
 
         ItemAllFieldsDto result = itemService.findById(user.getId(), item.getId());
 
-        assertNotNull(result);
-        assertThat(result.getId(), equalTo(item.getId()));
-        assertThat(result.getName(), equalTo(item.getName()));
+        assertNotNull(result, "Неправильный результат проверки на NotNull");
+        assertThat("Неправильный результат id", result.getId(), equalTo(item.getId()));
+        assertThat("Неправильный результат названия", result.getName(), equalTo(item.getName()));
 
         verify(mockItemRepository, times(1)).findById(item.getId());
     }
 
     @Test
-    void shouldThrowNotFoundExceptionWhenItemNotFoundInFindById() {
+    void testShouldThrowNotFoundExceptionWhenItemNotFoundInFindById() {
         when(mockItemRepository.findById(item.getId())).thenReturn(Optional.empty());
 
         long itemId = item.getId();
         long userId = user.getId();
-        assertThrows(NotFoundException.class, () -> itemService.findById(userId, itemId));
+        assertThrows(NotFoundException.class, () -> itemService.findById(userId, itemId),
+                "Ошибка отработала неправильно");
 
         verify(mockItemRepository, times(1)).findById(item.getId());
     }
 
     @Test
-    void shouldReturnItemsDtoInSearchByText() {
+    void testShouldReturnItemsDtoInSearchByText() {
         String searchText = "Test";
         List<Item> items = Collections.singletonList(item);
 
@@ -248,44 +252,44 @@ class ItemServiceImplTests {
 
         Collection<ItemAllFieldsDto> result = itemService.searchByText(searchText, user.getId(), Pageable.unpaged());
 
-        assertNotNull(result);
-        assertThat(result, hasSize(1));
-        assertThat(result.iterator().next().getId(), equalTo(item.getId()));
-        assertThat(result.iterator().next().getName(), equalTo(item.getName()));
+        assertNotNull(result, "Неправильный результат проверки на NotNull");
+        assertThat("Неправильный результат размер", result, hasSize(1));
+        assertThat("Неправильный результат сравнения", result.iterator().next().getId(), equalTo(item.getId()));
+        assertThat("Неправильный результат сравнения", result.iterator().next().getName(), equalTo(item.getName()));
 
         verify(mockItemRepository, times(1)).findItemsByText(searchText, Pageable.unpaged());
     }
 
     @Test
-    void shouldReturnEmptyListWhenSearchTextIsBlankInSearchByText() {
+    void testShouldReturnEmptyListWhenSearchTextIsBlankInSearchByText() {
         String searchText = "";
 
         Collection<ItemAllFieldsDto> result = itemService.searchByText(searchText, user.getId(), Pageable.unpaged());
 
-        assertNotNull(result);
-        assertThat(result, empty());
+        assertNotNull(result, "Неправильный результат проверки на NotNull");
+        assertThat("Неправильный результат на пустой текст", result, empty());
 
         verify(mockItemRepository, never()).findItemsByText(searchText, Pageable.unpaged());
     }
 
     @Test
-    void shouldReturnItemsDtoWhenFindItemsByUserId() {
+    void testShouldReturnItemsDtoWhenFindItemsByUserId() {
         List<Item> items = Collections.singletonList(item);
 
         when(mockItemRepository.findAllByOwnerId(user.getId(), Pageable.unpaged())).thenReturn(items);
 
         Collection<ItemAllFieldsDto> result = itemService.findItemsByUserId(user.getId(), Pageable.unpaged());
 
-        assertNotNull(result);
-        assertThat(result, hasSize(1));
-        assertThat(result.iterator().next().getId(), equalTo(item.getId()));
-        assertThat(result.iterator().next().getName(), equalTo(item.getName()));
+        assertNotNull(result, "Неправильный результат проверки на NotNull");
+        assertThat("Неправильный результат", result, hasSize(1));
+        assertThat("Неправильный результат", result.iterator().next().getId(), equalTo(item.getId()));
+        assertThat("Неправильный результат", result.iterator().next().getName(), equalTo(item.getName()));
 
         verify(mockItemRepository, times(1)).findAllByOwnerId(user.getId(), Pageable.unpaged());
     }
 
     @Test
-    void shouldSaveComment() {
+    void testShouldSaveComment() {
         long itemId = 1L;
         long userId = 1L;
         String text = "Test comment";
@@ -302,9 +306,9 @@ class ItemServiceImplTests {
 
         CommentResponseDto result = itemService.saveComment(itemId, userId, text);
 
-        assertNotNull(result);
-        assertThat(result.getId(), equalTo(comment.getId()));
-        assertThat(result.getText(), equalTo(comment.getText()));
+        assertNotNull(result, "Неправильный результат проверки на NotNull");
+        assertThat("Неправильный результат", result.getId(), equalTo(comment.getId()));
+        assertThat("Неправильный результат", result.getText(), equalTo(comment.getText()));
 
         verify(mockUserRepository, times(1)).findById(userId);
         verify(mockItemRepository, times(1)).findById(itemId);
@@ -317,12 +321,13 @@ class ItemServiceImplTests {
 
 
     @Test
-    void shouldThrowValidationExceptionWhenTextIsBlankWhenSaveComment() {
+    void testShouldThrowValidationExceptionWhenTextIsBlankWhenSaveComment() {
         long itemId = 1L;
         long userId = 1L;
         String text = "";
 
-        assertThrows(ValidationException.class, () -> itemService.saveComment(itemId, userId, text));
+        assertThrows(ValidationException.class, () -> itemService.saveComment(itemId, userId, text),
+                "Ошибка отработала неправильно");
 
         verify(mockUserRepository, never()).findById(userId);
         verify(mockItemRepository, never()).findById(itemId);
@@ -331,7 +336,7 @@ class ItemServiceImplTests {
     }
 
     @Test
-    void shouldThrowValidationExceptionWhenUserHasNoBookingsInSaveComment() {
+    void testShouldThrowValidationExceptionWhenUserHasNoBookingsInSaveComment() {
         long itemId = 1L;
         long userId = 1L;
         String text = "Test comment";
@@ -340,7 +345,8 @@ class ItemServiceImplTests {
         when(mockItemRepository.findById(itemId)).thenReturn(Optional.of(item));
         when(mockBookingRepository.findByBooker(user, Sort.unsorted())).thenReturn(Collections.emptyList());
 
-        assertThrows(ValidationException.class, () -> itemService.saveComment(itemId, userId, text));
+        assertThrows(ValidationException.class, () -> itemService.saveComment(itemId, userId, text),
+                "Ошибка отработала неправильно");
 
         verify(mockUserRepository, times(1)).findById(userId);
         verify(mockItemRepository, times(1)).findById(itemId);
@@ -349,7 +355,7 @@ class ItemServiceImplTests {
     }
 
     @Test
-    void shouldThrowValidationExceptionWhenNoBookingsForItemInSaveComment() {
+    void testShouldThrowValidationExceptionWhenNoBookingsForItemInSaveComment() {
         long itemId = 1L;
         long userId = 1L;
         String text = "Test comment";
@@ -358,7 +364,8 @@ class ItemServiceImplTests {
         when(mockItemRepository.findById(anyLong())).thenReturn(Optional.of(item));
         when(mockBookingRepository.findByBooker(eq(user), Mockito.any(Sort.class))).thenReturn(Collections.emptyList());
 
-        assertThrows(ValidationException.class, () -> itemService.saveComment(itemId, userId, text));
+        assertThrows(ValidationException.class, () -> itemService.saveComment(itemId, userId, text),
+                "Ошибка отработала неправильно");
 
         verify(mockUserRepository, times(1)).findById(userId);
         verify(mockItemRepository, times(1)).findById(itemId);
@@ -369,7 +376,7 @@ class ItemServiceImplTests {
     }
 
     @Test
-    void shouldThrowNotFoundExceptionWhenItemRequestNotFoundInSave() {
+    void testShouldThrowNotFoundExceptionWhenItemRequestNotFoundInSave() {
         long ownerId = 1L;
         long nonExistingItemRequestId = 1L;
 
@@ -383,7 +390,8 @@ class ItemServiceImplTests {
         when(mockUserRepository.findById(any())).thenReturn(Optional.of(owner));
         when(mockItemRequestRepository.findById(any())).thenReturn(Optional.empty());
 
-        assertThrows(NotFoundException.class, () -> itemService.save(itemDto, ownerId));
+        assertThrows(NotFoundException.class, () -> itemService.save(itemDto, ownerId),
+                "Ошибка отработала неправильно");
 
         verify(mockUserRepository, times(1)).findById(ownerId);
         verify(mockItemRequestRepository, times(1)).findById(nonExistingItemRequestId);
@@ -391,7 +399,7 @@ class ItemServiceImplTests {
     }
 
     @Test
-    void shouldUpdateItemDescriptionWhenDescriptionIsNotNullOrNotBlank() {
+    void testShouldUpdateItemDescriptionWhenDescriptionIsNotNullOrNotBlank() {
         long itemId = 1L;
         long userId = 1L;
 
@@ -420,23 +428,24 @@ class ItemServiceImplTests {
         verify(mockItemRepository, times(1)).findById(itemId);
         verify(mockItemRepository, times(1)).save(existingItem);
 
-        assertEquals(updatedDescription, result.getDescription());
+        assertEquals(updatedDescription, result.getDescription(), "Неправильный результат сравнения");
     }
 
     @Test
-    void shouldThrowNotFoundExceptionWhenUserNotFound() {
+    void testShouldThrowNotFoundExceptionWhenUserNotFound() {
         long itemId = 1L;
         long userId = 1L;
         String text = "Test comment";
 
         when(mockUserRepository.findById(userId)).thenReturn(Optional.empty());
 
-        assertThrows(NotFoundException.class, () -> itemService.saveComment(itemId, userId, text));
+        assertThrows(NotFoundException.class, () -> itemService.saveComment(itemId, userId, text),
+                "Ошибка отработала неправильно");
         verify(mockUserRepository, times(1)).findById(userId);
     }
 
     @Test
-    void shouldThrowNotFoundExceptionWhenItemNotFound() {
+    void testShouldThrowNotFoundExceptionWhenItemNotFound() {
         long itemId = 1L;
         long userId = 1L;
         String text = "Test comment";
@@ -444,13 +453,14 @@ class ItemServiceImplTests {
         when(mockUserRepository.findById(any())).thenReturn(Optional.ofNullable(user));
         when(mockItemRepository.findById(any())).thenReturn(Optional.empty());
 
-        assertThrows(NotFoundException.class, () -> itemService.saveComment(itemId, userId, text));
+        assertThrows(NotFoundException.class, () -> itemService.saveComment(itemId, userId, text),
+                "Ошибка отработала неправильно");
         verify(mockUserRepository, times(1)).findById(any());
         verify(mockItemRepository, times(1)).findById(any());
     }
 
     @Test
-    void shouldThrowValidationExceptionWhenNoBookingsExistForComment() {
+    void testShouldThrowValidationExceptionWhenNoBookingsExistForComment() {
         long itemId = 1L;
         long userId = 1L;
         String text = "Test Comment";
@@ -459,6 +469,7 @@ class ItemServiceImplTests {
         when(mockItemRepository.findById(any())).thenReturn(Optional.ofNullable(item));
         when(mockBookingRepository.findByBooker(any(), (Sort) any())).thenReturn(List.of(booking));
 
-        assertThrows(ValidationException.class, () -> itemService.saveComment(itemId, userId, text));
+        assertThrows(ValidationException.class, () -> itemService.saveComment(itemId, userId, text),
+                "Ошибка отработала неправильно");
     }
 }

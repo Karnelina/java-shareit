@@ -17,7 +17,7 @@ class ItemRequestRequestTests {
     private JacksonTester<ItemRequestRequestDto> itemRequestRequestDtoJacksonTester;
 
     @Test
-    void itemRequestRequestDtoTest() throws IOException {
+    void testItemRequestRequestDto() throws IOException {
         ItemRequestRequestDto itemRequestRequestDto = new ItemRequestRequestDto("description");
 
         JsonContent<ItemRequestRequestDto> jsonContent =

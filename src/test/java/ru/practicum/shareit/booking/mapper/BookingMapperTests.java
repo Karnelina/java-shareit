@@ -12,7 +12,7 @@ import static org.hamcrest.Matchers.equalTo;
 class BookingMapperTests {
 
     @Test
-    void mapFromBookingToGetItemBookingDtoTest() {
+    void testMapFromBookingToGetItemBookingDto() {
         User user = User.builder()
                 .id(1L)
                 .build();
@@ -24,8 +24,8 @@ class BookingMapperTests {
 
         GetItemBookingDto bookingDto = BookingMapper.mapFromBookingToBookingDto(booking);
 
-        assertThat(bookingDto.getId(), equalTo(booking.getId()));
-        assertThat(bookingDto.getBookerId(), equalTo(booking.getBooker().getId()));
+        assertThat("Неправильный результат проверки", bookingDto.getId(), equalTo(booking.getId()));
+        assertThat("Неправильный результат проверки", bookingDto.getBookerId(), equalTo(booking.getBooker().getId()));
     }
 
 }

@@ -36,18 +36,18 @@ class UserIntegrationTests {
 
     @Test
     @DirtiesContext
-    void shouldSaveUser() {
+    void testShouldSaveUser() {
         userService.save(user);
 
         TypedQuery<User> query = entityManager.createQuery("select u from User u where u.id = :id", User.class);
         User userFromDb = query.setParameter("id", 1L).getSingleResult();
-        assertThat(user.getName(), equalTo(userFromDb.getName()));
-        assertThat(user.getEmail(), equalTo(userFromDb.getEmail()));
+        assertThat("Неправильный результат имени", user.getName(), equalTo(userFromDb.getName()));
+        assertThat("Неправильный результат почты", user.getEmail(), equalTo(userFromDb.getEmail()));
     }
 
     @Test
     @DirtiesContext
-    void shouldUpdateUser() {
+    void testShouldUpdateUser() {
         userService.save(user);
 
         User update = User.builder().name("updatedName").build();
@@ -55,37 +55,37 @@ class UserIntegrationTests {
 
         TypedQuery<User> query = entityManager.createQuery("select u from User u where u.id = :id", User.class);
         User updatedUser = query.setParameter("id", 1L).getSingleResult();
-        assertThat(updatedUser.getName(), equalTo("updatedName"));
+        assertThat("Неправильный результат имени", updatedUser.getName(), equalTo("updatedName"));
     }
 
     @Test
     @DirtiesContext
-    void shouldFindByIdUser() {
+    void testShouldFindByIdUser() {
         userService.save(user);
         User newUser = userService.findById(1L);
 
         user.setId(1L);
-        assertThat(user, equalTo(newUser));
+        assertThat("Неправильный результат сравнения", user, equalTo(newUser));
     }
 
     @Test
     @DirtiesContext
-    void shouldFindAllUsers() {
+    void testShouldFindAllUsers() {
         userService.save(user);
 
         List<User> users = (List<User>) userService.findAll();
 
         user.setId(1L);
-        assertThat(users.get(0), equalTo(user));
+        assertThat("Неправильный результат id", users.get(0), equalTo(user));
     }
 
     @Test
     @DirtiesContext
-    void shouldDeleteByIdUser() {
+    void testShouldDeleteByIdUser() {
         userService.save(user);
-        assertThat(userService.findAll().size(), equalTo(1));
+        assertThat("Неправильный результат размера", userService.findAll().size(), equalTo(1));
 
         userService.deleteById(1L);
-        assertThat(userService.findAll().size(), equalTo(0));
+        assertThat("Неправильный результат размера", userService.findAll().size(), equalTo(0));
     }
 }

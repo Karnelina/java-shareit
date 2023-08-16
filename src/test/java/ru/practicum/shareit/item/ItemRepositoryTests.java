@@ -67,25 +67,25 @@ class ItemRepositoryTests {
     }
 
     @Test
-    void shouldReturnAllItems() {
+    void testShouldReturnAllItems() {
         List<Item> items = itemRepository.findItemsByText("pen", page);
-        assertTrue(items.contains(item1));
-        assertTrue(items.contains(item2));
-        assertTrue(items.contains(item3));
+        assertTrue(items.contains(item1), "Неправильный результат проверки");
+        assertTrue(items.contains(item2), "Неправильный результат проверки");
+        assertTrue(items.contains(item3), "Неправильный результат проверки");
 
-        assertThat(items, hasSize(3));
+        assertThat("Неправильный результат размера", items, hasSize(3));
     }
 
     @Test
-    void shouldReturnTwoItems() {
+    void testShouldReturnTwoItems() {
         List<Item> items = itemRepository.findItemsByText("black pen", page);
-        assertThat(items, containsInAnyOrder(item1, item3));
-        assertThat(items, hasSize(2));
+        assertThat("Неправильный результат", items, containsInAnyOrder(item1, item3));
+        assertThat("Неправильный результат", items, hasSize(2));
     }
 
     @Test
-    void shouldReturnNoItems() {
+    void testShouldReturnNoItems() {
         List<Item> items = itemRepository.findItemsByText("brick", page);
-        assertThat(items.size(), equalTo(0));
+        assertThat("Неправильный результат", items.size(), equalTo(0));
     }
 }

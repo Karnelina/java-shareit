@@ -19,7 +19,7 @@ class BookingAllFieldsDtoTests {
     private JacksonTester<BookingAllFieldsDto> itemRequestDtoJacksonTester;
 
     @Test
-    void bookingAllFieldsDtoTest() throws IOException {
+    void testBookingAllFieldsDto() throws IOException {
         LocalDateTime start = LocalDateTime.of(2023, 1, 1, 12, 0);
         LocalDateTime end = LocalDateTime.of(2023, 1, 2, 12, 0);
 

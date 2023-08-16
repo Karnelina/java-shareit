@@ -88,7 +88,7 @@ class ItemRequestServiceImplTests {
     }
 
     @Test
-    void shouldThrowExceptionWhenUserNotFoundOnSaveItemRequest() {
+    void testShouldThrowExceptionWhenUserNotFoundOnSaveItemRequest() {
         when(mockUserRepository.findById(anyLong()))
                 .thenReturn(Optional.empty());
 
@@ -98,7 +98,7 @@ class ItemRequestServiceImplTests {
     }
 
     @Test
-    void shouldSaveItemRequest() {
+    void testShouldSaveItemRequest() {
         when(mockUserRepository.findById(anyLong()))
                 .thenReturn(Optional.ofNullable(user));
 
@@ -112,7 +112,7 @@ class ItemRequestServiceImplTests {
     }
 
     @Test
-    void shouldThrowExceptionWhenFindAllItemsNotFoundUser() {
+    void testShouldThrowExceptionWhenFindAllItemsNotFoundUser() {
         when(mockUserRepository.findById(anyLong()))
                 .thenReturn(Optional.empty());
 
@@ -121,7 +121,7 @@ class ItemRequestServiceImplTests {
     }
 
     @Test
-    void shouldFindOwnItemRequests() {
+    void testShouldFindOwnItemRequests() {
         when(mockUserRepository.findById(1L))
                 .thenReturn(Optional.ofNullable(user));
 
@@ -153,7 +153,7 @@ class ItemRequestServiceImplTests {
     }
 
     @Test
-    void shouldThrowExceptionWhenFindAllItemRequestsWithNotFoundUser() {
+    void testShouldThrowExceptionWhenFindAllItemRequestsWithNotFoundUser() {
         when(mockUserRepository.findById(anyLong()))
                 .thenReturn(Optional.empty());
 
@@ -162,7 +162,7 @@ class ItemRequestServiceImplTests {
     }
 
     @Test
-    void shouldAllItemRequests() {
+    void testShouldAllItemRequests() {
         when(mockUserRepository.findById(1L))
                 .thenReturn(Optional.ofNullable(user));
 
@@ -190,7 +190,7 @@ class ItemRequestServiceImplTests {
     }
 
     @Test
-    void shouldThrowExceptionWhenFindItemRequestsByIdWithNotFoundUser() {
+    void testShouldThrowExceptionWhenFindItemRequestsByIdWithNotFoundUser() {
         when(mockUserRepository.findById(anyLong()))
                 .thenReturn(Optional.empty());
 
@@ -199,20 +199,21 @@ class ItemRequestServiceImplTests {
     }
 
     @Test
-    void shouldThrowExceptionWhenFindItemRequestsWhenItemRequestNotFound() {
+    void testShouldThrowExceptionWhenFindItemRequestsWhenItemRequestNotFound() {
         when(mockUserRepository.findById(anyLong()))
                 .thenReturn(Optional.ofNullable(user));
 
         when(mockItemRequestRepository.findById(anyLong()))
                 .thenReturn(Optional.empty());
 
-        assertThrows(NotFoundException.class, () -> itemRequestService.findItemRequestsById(1L, 0L));
+        assertThrows(NotFoundException.class, () -> itemRequestService.findItemRequestsById(1L, 0L),
+                "Ошибка отработала неправильно");
         verify(mockUserRepository, times(1)).findById(anyLong());
         verify(mockItemRequestRepository, times(1)).findById(anyLong());
     }
 
     @Test
-    void shouldFindItemRequestById() {
+    void testShouldFindItemRequestById() {
         when(mockUserRepository.findById(1L))
                 .thenReturn(Optional.ofNullable(user));
 
@@ -237,7 +238,7 @@ class ItemRequestServiceImplTests {
                                         .build()))
                 .build();
 
-        assertThat(result, equalTo(itemRequestService.findItemRequestsById(user.getId(), itemRequest.getId())));
+        assertThat("Неправильный результат сравнения", result, equalTo(itemRequestService.findItemRequestsById(user.getId(), itemRequest.getId())));
         verify(mockUserRepository, times(1)).findById(anyLong());
         verify(mockItemRequestRepository, times(1)).findById(anyLong());
         verify(mockItemRepository, times(1)).findItemByItemRequestIn(any());

@@ -20,15 +20,15 @@ class ValuesAllowedConstraintValidatorTests {
     private ValuesAllowedConstraintValidator validator;
 
     @Test
-    void shouldReturnTrueForNullValue() {
+    void testShouldReturnTrueForNullValue() {
         validator.initialize(createAnnotation("value1", "value2"));
-        assertTrue(validator.isValid(null, context));
+        assertTrue(validator.isValid(null, context), "Неправильный результат сравнения");
     }
 
     @Test
-    void shouldReturnTrueForValidValue() {
+    void testShouldReturnTrueForValidValue() {
         validator.initialize(createAnnotation("value1", "value2"));
-        assertTrue(validator.isValid("value1", context));
+        assertTrue(validator.isValid("value1", context), "Неправильный результат сравнения");
     }
 
     private ValuesAllowedConstraint createAnnotation(String... values) {

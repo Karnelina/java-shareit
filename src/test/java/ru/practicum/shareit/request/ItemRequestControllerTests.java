@@ -72,7 +72,7 @@ class ItemRequestControllerTests {
     }
 
     @Test
-    void shouldSaveItemRequest() throws Exception {
+    void testShouldSaveItemRequest() throws Exception {
         when(mockItemRequestService.saveItemRequest(any(), anyLong()))
                 .thenReturn(itemRequest);
 
@@ -88,7 +88,7 @@ class ItemRequestControllerTests {
     }
 
     @Test
-    void shouldFindOnwItemRequests() throws Exception {
+    void testShouldFindOnwItemRequests() throws Exception {
         when(mockItemRequestService.findOwnItemRequests(anyLong()))
                 .thenReturn(List.of(itemRequestResponseDto));
 
@@ -101,7 +101,7 @@ class ItemRequestControllerTests {
     }
 
     @Test
-    void shouldFindAllItemRequests() throws Exception {
+    void testShouldFindAllItemRequests() throws Exception {
         when(mockItemRequestService.findAllItemRequests(anyLong(), any()))
                 .thenReturn(List.of(itemRequestResponseDto));
 
@@ -114,7 +114,7 @@ class ItemRequestControllerTests {
     }
 
     @Test
-    void shouldFindItemRequestById() throws Exception {
+    void testShouldFindItemRequestById() throws Exception {
         when(mockItemRequestService.findItemRequestsById(anyLong(), anyLong()))
                 .thenReturn(itemRequestResponseDto);
 

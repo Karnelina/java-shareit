@@ -44,19 +44,19 @@ class UserServiceImplTests {
     }
 
     @Test
-    void shouldSaveUser() {
+    void testShouldSaveUser() {
         when(mockUserRepository.save(Mockito.any(User.class)))
                 .thenReturn(user);
 
         User userForBd = user;
         userForBd.setId(null);
 
-        assertThat(userService.save(userForBd), equalTo(user));
+        assertThat("Неправильный результат", userService.save(userForBd), equalTo(user));
         verify(mockUserRepository, times(1)).save(any());
     }
 
     @Test
-    void shouldThrowExceptionWhenSavingUserWithDuplicateEmail() {
+    void testShouldThrowExceptionWhenSavingUserWithDuplicateEmail() {
         when(mockUserRepository.save(Mockito.any(User.class)))
                 .thenThrow(DataIntegrityViolationException.class);
 
@@ -66,52 +66,54 @@ class UserServiceImplTests {
                 .build();
 
         assertThrows(AlreadyExistsException.class,
-                () -> userService.save(duplicateUser));
+                () -> userService.save(duplicateUser), "Ошибка отработала неправильно");
 
         verify(mockUserRepository, times(1)).save(any());
     }
 
     @Test
-    void shouldFindByIdUser() {
+    void testShouldFindByIdUser() {
         Long userId = user.getId();
 
         when(mockUserRepository.findById(userId))
                 .thenReturn(Optional.ofNullable(user));
 
-        assertThat(user, equalTo(userService.findById(userId)));
+        assertThat("Неправильный результат", user, equalTo(userService.findById(userId)));
         verify(mockUserRepository, times(1)).findById(userId);
     }
 
     @Test
-    void shouldThrowExceptionWhenNotFoundFindById() {
+    void testShouldThrowExceptionWhenNotFoundFindById() {
         long userId = 0L;
         when(mockUserRepository.findById(userId))
                 .thenReturn(Optional.empty());
 
-        assertThrows(NotFoundException.class, () -> userService.findById(userId));
+        assertThrows(NotFoundException.class, () -> userService.findById(userId)
+                , "Ошибка отработала неправильно");
         verify(mockUserRepository, times(1)).findById(any());
     }
 
     @Test
-    void shouldFindAllUsers() {
+    void testShouldFindAllUsers() {
         when(mockUserRepository.findAll())
                 .thenReturn(List.of(user));
 
-        assertThat(userService.findAll().size(), equalTo(1));
+        assertThat("Неправильный результат", userService.findAll().size(), equalTo(1));
         verify(mockUserRepository, times(1)).findAll();
     }
 
     @Test
-    void shouldThrowExceptionWhenUserNotFoundOnUpdate() {
+    void testShouldThrowExceptionWhenUserNotFoundOnUpdate() {
         when(mockUserRepository.findById(anyLong()))
                 .thenReturn(Optional.empty());
 
-        assertThrows(NotFoundException.class, () -> userService.update(user, 0L));
+        assertThrows(NotFoundException.class, () -> userService.update(user, 0L)
+                , "Ошибка отработала неправильно");
         verify(mockUserRepository, times(1)).findById(0L);
     }
 
     @Test
-    void shouldChangeUserNameOnUpdate() {
+    void testShouldChangeUserNameOnUpdate() {
         User update = User.builder()
                 .name("update")
                 .build();
@@ -125,12 +127,12 @@ class UserServiceImplTests {
         when(mockUserRepository.saveAndFlush(Mockito.any(User.class)))
                 .thenReturn(updatedUser);
 
-        assertThat(userService.update(update, user.getId()), equalTo(updatedUser));
+        assertThat("Неправильный результат", userService.update(update, user.getId()), equalTo(updatedUser));
         verify(mockUserRepository, times(1)).saveAndFlush(updatedUser);
     }
 
     @Test
-    void shouldChangeUserEmailOnUpdate() {
+    void testShouldChangeUserEmailOnUpdate() {
         User update = User.builder()
                 .email("update@email.ru")
                 .build();
@@ -144,12 +146,12 @@ class UserServiceImplTests {
         when(mockUserRepository.saveAndFlush(Mockito.any(User.class)))
                 .thenReturn(updatedUser);
 
-        assertThat(userService.update(update, user.getId()), equalTo(updatedUser));
+        assertThat("Неправильный результат", userService.update(update, user.getId()), equalTo(updatedUser));
         verify(mockUserRepository, times(1)).saveAndFlush(updatedUser);
     }
 
     @Test
-    void shouldThrowExceptionWhenUserAlreadyExistsOnUpdate() {
+    void testShouldThrowExceptionWhenUserAlreadyExistsOnUpdate() {
         User update = User.builder()
                 .name("update")
                 .email("update@email.ru")
@@ -165,12 +167,13 @@ class UserServiceImplTests {
                 .thenThrow(DataIntegrityViolationException.class);
 
         long userId = user.getId();
-        assertThrows(AlreadyExistsException.class, () -> userService.update(update, userId));
+        assertThrows(AlreadyExistsException.class, () -> userService.update(update, userId),
+                "Ошибка отработала неправильно");
         verify(mockUserRepository, times(1)).saveAndFlush(updatedUser);
     }
 
     @Test
-    void shouldDeleteUserById() {
+    void testShouldDeleteUserById() {
         userService.deleteById(user.getId());
         verify(mockUserRepository, times(1)).deleteById(user.getId());
     }
