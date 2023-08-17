@@ -5,14 +5,13 @@ import ru.practicum.shareit.booking.dto.GetItemBookingDto;
 import ru.practicum.shareit.item.dto.CommentResponseDto;
 import ru.practicum.shareit.item.dto.ItemAllFieldsDto;
 import ru.practicum.shareit.item.dto.ItemDto;
-import ru.practicum.shareit.item.dto.ItemShortDto;
+import ru.practicum.shareit.item.dto.ItemGetOwnItemRequestDto;
 import ru.practicum.shareit.item.model.Item;
 
-import java.util.List;
+import java.util.Collection;
 
 @UtilityClass
 public class ItemMapper {
-
     public Item mapToItem(ItemDto itemDto) {
         return Item.builder()
                 .id(itemDto.getId())
@@ -23,31 +22,44 @@ public class ItemMapper {
     }
 
     public ItemDto mapToItemDto(Item item) {
-        return ItemDto.builder()
+        if (item.getItemRequest() == null) {
+            return ItemDto.builder()
+                    .id(item.getId())
+                    .name(item.getName())
+                    .description(item.getDescription())
+                    .available(item.getAvailable())
+                    .build();
+        } else {
+            return ItemDto.builder()
+                    .id(item.getId())
+                    .name(item.getName())
+                    .description(item.getDescription())
+                    .available(item.getAvailable())
+                    .requestId(item.getItemRequest().getId())
+                    .build();
+        }
+    }
+
+    public ItemAllFieldsDto mapToItemAllFieldsDto(Item item, GetItemBookingDto lastBooking,
+                                                  GetItemBookingDto nextBooking, Collection<CommentResponseDto> comments) {
+        return ItemAllFieldsDto.builder()
                 .id(item.getId())
                 .name(item.getName())
                 .description(item.getDescription())
                 .available(item.getAvailable())
+                .lastBooking(lastBooking)
+                .nextBooking(nextBooking)
+                .comments(comments)
                 .build();
     }
 
-    public ItemAllFieldsDto mapToItemAllFieldsDto(Item item, GetItemBookingDto lastBooking,
-                                                  GetItemBookingDto nextBooking, List<CommentResponseDto> comments) {
-        return new ItemAllFieldsDto(
-                item.getId(),
-                item.getName(),
-                item.getDescription(),
-                item.getAvailable(),
-                lastBooking,
-                nextBooking,
-                comments
-        );
-    }
-
-    public ItemShortDto toGetBookingDtoFromItem(Item item) {
-        return ItemShortDto.builder()
+    public ItemGetOwnItemRequestDto mapFromItemToItemGetOwnItemRequestDto(Item item) {
+        return ItemGetOwnItemRequestDto.builder()
                 .id(item.getId())
                 .name(item.getName())
+                .description(item.getDescription())
+                .requestId(item.getItemRequest().getId())
+                .available(item.getAvailable())
                 .build();
     }
 }

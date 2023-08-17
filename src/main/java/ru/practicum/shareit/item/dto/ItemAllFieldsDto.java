@@ -1,23 +1,22 @@
 package ru.practicum.shareit.item.dto;
 
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
-import lombok.EqualsAndHashCode;
 import ru.practicum.shareit.booking.dto.GetItemBookingDto;
 
-import java.util.List;
+import java.util.Collection;
 
-@EqualsAndHashCode(callSuper = true)
 @Data
-public class ItemAllFieldsDto extends ItemDto {
+@AllArgsConstructor
+@Builder
+public class ItemAllFieldsDto {
+    private Long id;
+    private String name;
+    private String description;
+    private Boolean available;
+    private Long itemRequest;
     private GetItemBookingDto lastBooking;
     private GetItemBookingDto nextBooking;
-    private List<CommentResponseDto> comments;
-
-    public ItemAllFieldsDto(long id, String name, String description, Boolean available,
-                            GetItemBookingDto lastBooking, GetItemBookingDto nextBooking, List<CommentResponseDto> comments) {
-        super(id, name, description, available);
-        this.lastBooking = lastBooking;
-        this.nextBooking = nextBooking;
-        this.comments = comments;
-    }
+    private Collection<CommentResponseDto> comments;
 }
