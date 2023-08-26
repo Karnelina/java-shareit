@@ -27,7 +27,7 @@ import static ru.practicum.shareit.util.Constant.*;
 @ToLog
 public class BookingController {
 
-    private final BookingService bookingService;;
+    private final BookingService bookingService;
 
     @PostMapping
     public BookingAllFieldsDto saveBooking(@Valid @RequestBody CreateBookingDto bookingSavingDto,
