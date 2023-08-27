@@ -6,8 +6,10 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.format.annotation.DateTimeFormat;
 import ru.practicum.shareit.validation.StartBeforeEndDateValid;
+import ru.practicum.shareit.validation.marker.Create;
 
 import javax.validation.constraints.FutureOrPresent;
+import javax.validation.constraints.NotNull;
 import java.time.LocalDateTime;
 
 import static ru.practicum.shareit.util.Constants.TIME_PATTERN;
@@ -18,6 +20,7 @@ import static ru.practicum.shareit.util.Constants.TIME_PATTERN;
 @AllArgsConstructor
 @StartBeforeEndDateValid
 public class CreateBookingDto {
+    @NotNull(groups = {Create.class})
     private Long itemId;
 
     @FutureOrPresent
