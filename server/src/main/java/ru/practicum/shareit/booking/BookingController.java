@@ -9,11 +9,7 @@ import ru.practicum.shareit.aspect.ToLog;
 import ru.practicum.shareit.booking.dto.BookingAllFieldsDto;
 import ru.practicum.shareit.booking.dto.CreateBookingDto;
 import ru.practicum.shareit.booking.service.BookingService;
-import ru.practicum.shareit.validation.ValuesAllowedConstraint;
 
-import javax.validation.Valid;
-import javax.validation.constraints.Positive;
-import javax.validation.constraints.PositiveOrZero;
 import java.util.Collection;
 import java.util.stream.Collectors;
 
@@ -30,7 +26,7 @@ public class BookingController {
     private final BookingService bookingService;
 
     @PostMapping
-    public BookingAllFieldsDto saveBooking(@Valid @RequestBody CreateBookingDto bookingSavingDto,
+    public BookingAllFieldsDto saveBooking(@RequestBody CreateBookingDto bookingSavingDto,
                                            @RequestHeader(REQUEST_HEADER_USER_ID) Long userId) {
         Booking booking = bookingService.save(
                 bookingSavingDto.getItemId(),
@@ -43,17 +39,9 @@ public class BookingController {
 
     @GetMapping
     public Collection<BookingAllFieldsDto> findAllBookingsByUserId(@RequestHeader(REQUEST_HEADER_USER_ID) Long userId,
-                                                                   @ValuesAllowedConstraint(propName = "state",
-                                                                           values = {"all",
-                                                                                   "current",
-                                                                                   "past",
-                                                                                   "future",
-                                                                                   "waiting",
-                                                                                   "rejected"},
-                                                                           message = "Unknown state: UNSUPPORTED_STATUS")
                                                                    @RequestParam(defaultValue = "all") String state,
-                                                                   @RequestParam(defaultValue = PAGE_DEFAULT_FROM) @PositiveOrZero Short from,
-                                                                   @RequestParam(defaultValue = PAGE_DEFAULT_SIZE) @Positive Short size) {
+                                                                   @RequestParam(defaultValue = PAGE_DEFAULT_FROM) Short from,
+                                                                   @RequestParam(defaultValue = PAGE_DEFAULT_SIZE) Short size) {
         Pageable page = PageRequest.of(from / size, size, SORT_BY_START_DATE_DESC);
         return bookingService.findByUserId(userId, state, page)
                 .stream()
@@ -79,17 +67,9 @@ public class BookingController {
 
     @GetMapping("/owner")
     public Collection<BookingAllFieldsDto> findOwnerBookings(@RequestHeader(REQUEST_HEADER_USER_ID) Long userId,
-                                                             @ValuesAllowedConstraint(propName = "state",
-                                                                     values = {"all",
-                                                                             "current",
-                                                                             "past",
-                                                                             "future",
-                                                                             "waiting",
-                                                                             "rejected"},
-                                                                     message = "Unknown state: UNSUPPORTED_STATUS")
                                                              @RequestParam(defaultValue = "all") String state,
-                                                             @RequestParam(defaultValue = PAGE_DEFAULT_FROM) @PositiveOrZero Short from,
-                                                             @RequestParam(defaultValue = PAGE_DEFAULT_SIZE) @Positive Short size) {
+                                                             @RequestParam(defaultValue = PAGE_DEFAULT_FROM) Short from,
+                                                             @RequestParam(defaultValue = PAGE_DEFAULT_SIZE) Short size) {
 
         Pageable page = PageRequest.of(from / size, size, SORT_BY_START_DATE_DESC);
         return bookingService.findOwnerBookings(userId, state, page)

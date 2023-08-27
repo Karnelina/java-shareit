@@ -29,7 +29,7 @@ public class ErrorHandler {
             MethodArgumentNotValidException.class})
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public Map<String, String> catchConstraintViolationException(final ConstraintViolationException e) {
-        log.debug("Получен статус 500 Internal server error {}", e.getMessage(), e);
+        log.debug("Получен статус 400 Bad Request {}", e.getMessage(), e);
         return Map.of(
                 ERROR_RESPONSE, e.getConstraintViolations()
                         .stream()

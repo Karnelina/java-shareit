@@ -1,13 +1,10 @@
 package ru.practicum.shareit.user;
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import ru.practicum.shareit.aspect.ToLog;
 import ru.practicum.shareit.user.dto.UserDto;
 import ru.practicum.shareit.user.service.UserService;
-import ru.practicum.shareit.validation.marker.Create;
-import ru.practicum.shareit.validation.marker.Update;
 
 import java.util.Collection;
 import java.util.stream.Collectors;
@@ -20,13 +17,13 @@ public class UserController {
     private final UserService userService;
 
     @PostMapping
-    public UserDto saveUser(@Validated(Create.class) @RequestBody UserDto userDto) {
+    public UserDto saveUser(@RequestBody UserDto userDto) {
         User user = userService.save(UserMapper.mapToUser(userDto));
         return UserMapper.mapToUserDto(user);
     }
 
     @PatchMapping("/{userId}")
-    public UserDto updateUser(@Validated(Update.class) @RequestBody UserDto userDto, @PathVariable long userId) {
+    public UserDto updateUser(@RequestBody UserDto userDto, @PathVariable long userId) {
         User user = userService.update(UserMapper.mapToUser(userDto), userId);
         return UserMapper.mapToUserDto(user);
     }

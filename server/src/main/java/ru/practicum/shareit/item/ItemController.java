@@ -13,10 +13,7 @@ import ru.practicum.shareit.item.dto.ItemDto;
 import ru.practicum.shareit.item.mapper.ItemMapper;
 import ru.practicum.shareit.item.model.Item;
 import ru.practicum.shareit.item.service.ItemService;
-import ru.practicum.shareit.validation.marker.Create;
-import ru.practicum.shareit.validation.marker.Update;
 
-import javax.validation.constraints.PositiveOrZero;
 import java.util.Collection;
 
 import static ru.practicum.shareit.util.Constant.*;
@@ -30,14 +27,14 @@ public class ItemController {
     private final ItemService itemService;
 
     @PostMapping
-    public ItemDto saveItem(@Validated(Create.class) @RequestBody ItemDto itemDto,
+    public ItemDto saveItem(@RequestBody ItemDto itemDto,
                             @RequestHeader(REQUEST_HEADER_USER_ID) long userId) {
         Item item = itemService.save(itemDto, userId);
         return ItemMapper.mapToItemDto(item);
     }
 
     @PatchMapping("/{itemId}")
-    public ItemDto updateItem(@Validated(Update.class) @RequestBody ItemDto itemDto,
+    public ItemDto updateItem(@RequestBody ItemDto itemDto,
                               @RequestHeader(REQUEST_HEADER_USER_ID) long userId,
                               @PathVariable long itemId) {
         Item item = itemService.update(ItemMapper.mapToItem(itemDto), itemId, userId);
@@ -53,8 +50,8 @@ public class ItemController {
 
     @GetMapping
     public Collection<ItemAllFieldsDto> findItemsByUserId(@RequestHeader(REQUEST_HEADER_USER_ID) long userId,
-                                                          @RequestParam(defaultValue = PAGE_DEFAULT_FROM) @PositiveOrZero Short from,
-                                                          @RequestParam(defaultValue = PAGE_DEFAULT_SIZE) @PositiveOrZero Short size) {
+                                                          @RequestParam(defaultValue = PAGE_DEFAULT_FROM) Short from,
+                                                          @RequestParam(defaultValue = PAGE_DEFAULT_SIZE) Short size) {
 
         Pageable page = PageRequest.of(from / size, size);
 
@@ -64,8 +61,8 @@ public class ItemController {
     @GetMapping("/search")
     public Collection<ItemAllFieldsDto> searchByText(@RequestParam(name = "text") String text,
                                                      @RequestHeader(REQUEST_HEADER_USER_ID) long userId,
-                                                     @RequestParam(defaultValue = PAGE_DEFAULT_FROM) @PositiveOrZero Short from,
-                                                     @RequestParam(defaultValue = PAGE_DEFAULT_SIZE) @PositiveOrZero Short size) {
+                                                     @RequestParam(defaultValue = PAGE_DEFAULT_FROM) Short from,
+                                                     @RequestParam(defaultValue = PAGE_DEFAULT_SIZE) Short size) {
 
 
         Pageable page = PageRequest.of(from / size, size);

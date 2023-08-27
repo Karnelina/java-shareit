@@ -10,8 +10,6 @@ import ru.practicum.shareit.request.dto.ItemRequestResponseDto;
 import ru.practicum.shareit.request.service.ItemRequestService;
 import ru.practicum.shareit.util.OffsetBasedPageRequest;
 
-import javax.validation.constraints.Positive;
-import javax.validation.constraints.PositiveOrZero;
 import java.util.Collection;
 
 import static ru.practicum.shareit.util.Constant.*;
@@ -37,8 +35,8 @@ public class ItemRequestController {
 
     @GetMapping("/all")
     public Collection<ItemRequestResponseDto> findAllItemRequests(@RequestHeader(REQUEST_HEADER_USER_ID) Long userId,
-                                                                  @RequestParam(defaultValue = PAGE_DEFAULT_FROM) @PositiveOrZero Short from,
-                                                                  @RequestParam(defaultValue = PAGE_DEFAULT_SIZE) @Positive Short size) {
+                                                                  @RequestParam(defaultValue = PAGE_DEFAULT_FROM) Short from,
+                                                                  @RequestParam(defaultValue = PAGE_DEFAULT_SIZE) Short size) {
 
         Pageable page = new OffsetBasedPageRequest(from, size, Sort.by("created").descending());
         return itemRequestService.findAllItemRequests(userId, page);
